@@ -16,3 +16,4 @@ function createBoard() {
     mainContainer.appendChild(board);
 }
 createBoard();
+
