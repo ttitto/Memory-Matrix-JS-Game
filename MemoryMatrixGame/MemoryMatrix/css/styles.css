@@ -5,13 +5,28 @@
 
 body {
     background-image: url('../imgs/body-bg.png');
-    text-align: center;
 }
 /*#region MAIN-CANVAS */
 
-#main-canvas {
-    margin-top:50px;
+#main-container {
+    width: 640px;
+    height: 480px;
+    max-width: 90%;
+    margin: 0 auto;
+    margin-top: 50px;
     background-image: url('../imgs/main-bg.png');
+    text-align: center;
+    overflow: hidden;
 }
 
+#board {
+    width: 80%;
+    height: 300px;
+    background: lightgray;
+    padding: 5%;
+    border-radius: 25px;
+    border: 3px solid darkgray;
+    box-shadow: #DCFBD2 3px 3px 3px;
+    z-index: 100;
+}
 /*#endregion */

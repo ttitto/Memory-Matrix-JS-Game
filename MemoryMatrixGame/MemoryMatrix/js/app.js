@@ -1,9 +1,18 @@
-﻿function createBackground(w, h) {
-    var bgCanvas = document.createElement('canvas');
-    bgCanvas.id = 'main-canvas';
-    bgCanvas.height = h;
-    bgCanvas.width = w;
-    document.body.appendChild(bgCanvas);
+﻿
+var mainContainer;
+var board;
+
+function createBackground() {
+    mainContainer = document.createElement('main');
+    mainContainer.id = 'main-container';
+
+    document.body.appendChild(mainContainer);
 }
 
+function createBoard() {
+    board = document.createElement('div');
+    board.id = 'board';
+    mainContainer.appendChild(board);
+}
 createBackground(640, 480);
+createBoard();
