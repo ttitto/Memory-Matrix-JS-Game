@@ -1,4 +1,17 @@
-﻿body {
+﻿html, body, canvas {
     margin: 0;
     padding: 0;
 }
+
+body {
+    background-image: url('../imgs/body-bg.png');
+    text-align: center;
+}
+/*#region MAIN-CANVAS */
+
+#main-canvas {
+    margin-top:50px;
+    background-image: url('../imgs/main-bg.png');
+}
+
+/*#endregion */
