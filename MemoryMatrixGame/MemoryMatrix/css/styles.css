@@ -6,27 +6,30 @@
 body {
     background-image: url('../imgs/body-bg.png');
 }
-/*#region MAIN-CANVAS */
+/*#region MAIN-CONTAINER */
 
 #main-container {
     width: 640px;
     height: 480px;
     max-width: 90%;
     margin: 0 auto;
-    margin-top: 50px;
+    padding:4%;
+    border-radius: 15px;
     background-image: url('../imgs/main-bg.png');
     text-align: center;
     overflow: hidden;
+    display: flex;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
 }
 
 #board {
-    width: 80%;
-    height: 300px;
+    width: 40%;
+    height:40%;
+    margin:  auto;
     background: lightgray;
     padding: 5%;
-    border-radius: 25px;
+    border-radius: 35px;
     border: 3px solid darkgray;
-    box-shadow: #DCFBD2 3px 3px 3px;
-    z-index: 100;
 }
 /*#endregion */

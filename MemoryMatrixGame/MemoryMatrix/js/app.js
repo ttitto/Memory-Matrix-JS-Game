@@ -8,11 +8,11 @@ function createBackground() {
 
     document.body.appendChild(mainContainer);
 }
+createBackground();
 
 function createBoard() {
     board = document.createElement('div');
     board.id = 'board';
     mainContainer.appendChild(board);
 }
-createBackground(640, 480);
 createBoard();
