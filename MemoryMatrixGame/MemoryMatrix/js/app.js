@@ -27,11 +27,13 @@ function createScoreBoard() {
         var li = document.createElement('li');
         li.className = 'score-board-element';
         li.innerText = categories[i].content;
+		 li.textContent = categories[i].content;
         scoreBoardList.appendChild(li);
 
         var sp = document.createElement('span');
         sp.className = 'score-board-value';
         sp.innerText = categories[i].val;
+		sp.textContent = categories[i].val;
         li.appendChild(sp);
     }
 
@@ -56,6 +58,7 @@ function createInfoBox() {
     infobox = document.createElement('div');
     infobox.id = 'infobox';
     infobox.innerText = 'TEstTEstTEstTEstTEstTEstTEst TEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEst';
+	infobox.textContent='TEstTEstTEstTEstTEstTEstTEst TEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEst';
     mainContainer.appendChild(infobox);
 }
 createInfoBox();
