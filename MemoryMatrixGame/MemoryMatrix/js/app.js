@@ -3,6 +3,7 @@
 var mainContainer;
 var board;
 var currentLvl = 3; // 3 is the starting level
+var levelBonus = 5; //holds the points that will be added if the level succeeds
 var cellSize = 50;
 var wasLevelCleared = true;
 var minRowsSize = 3;
@@ -47,15 +48,27 @@ function createScoreBoard() {
         var sp = document.createElement('span');
         sp.className = 'score-board-value';
         sp.innerText = categories[i].val;
-		sp.textContent = categories[i].val;
+        sp.textContent = categories[i].val;
         li.appendChild(sp);
     }
+
+}
+
+function addPoints(tilePts, levelPts) {
+    //increases the score by given amount of points passed as parameters
+    levelPts = levelPts || 0;
+    var scoreSpan = document.getElementsByClassName('score-board-value')[2];
+    console.log(scoreSpan);
+    var score = scoreSpan.innerText || scoreSpan.textContent;
+    score = parseInt(score) + parseInt(tilePts) + parseInt(levelPts);
+    scoreSpan.innerText = score;
+    scoreSpan.textContent = score;
 }
 
 function getUserClick(event) {
     // This function handles the player click
     var selectedCellID = event.target.getAttribute('id');
-    
+
     // TODO: Update the user score
     // TODO: Update the info msg at the bottom
 }
@@ -78,17 +91,17 @@ function createBoard(cells, rows) {
     var boardId = 'board';
 
     var board = document.getElementById(boardId);
-    if(!board) {
+    if (!board) {
         board = document.createElement('div');
         board.id = boardId;
         mainContainer.appendChild(board);
     }
     board.innerHTML = '';
-    
+
     // Dynamic generation of the board sizes based on the number of cells
     board.style.width = (cells * cellSize) + 60 + 'px'; // 60 is the board padding
     board.style.height = (rows * cellSize) + 60 + 'px';
-    
+
     setTimeout(function(){
         for(var i = 1;i <= rows; i++){
             var row = document.createElement('div');
@@ -111,11 +124,14 @@ function createInfoBox() {
     var infobox = document.createElement('div');
     infobox.id = 'infobox';
     infobox.innerText = 'TEstTEstTEstTEstTEstTEstTEst TEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEst';
-	infobox.textContent='TEstTEstTEstTEstTEstTEstTEst TEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEst';
+    infobox.textContent = 'TEstTEstTEstTEstTEstTEstTEst TEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEst';
     mainContainer.appendChild(infobox);
 }
+
+
 
 createBackground();
 createScoreBoard();
 createBoard();
 createInfoBox();
+addPoints(10);
