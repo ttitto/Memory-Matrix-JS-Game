@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 var mainContainer;
 var board;
@@ -80,7 +80,7 @@ function goToNextLvl() {
     // TODO: Add this functionality
     // 1. Chech which is the current level and calc the board cells and rows
     // 2. Invoke "createBoard(cells, rows)" by giving in the correct number of cells and rows
-    // 3. The minimum size is 3x3.
+    // 3. The minimum size is 2x2.
     // 4. The maximum size is 6x6
     createBoard((Math.random() * (6 - 3) + 3).toFixed(0), (Math.random() * (6 - 3) + 3).toFixed(0)); // This is just a sample
 }
