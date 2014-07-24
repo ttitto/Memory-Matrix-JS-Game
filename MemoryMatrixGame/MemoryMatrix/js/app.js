@@ -1,4 +1,5 @@
-﻿
+'use strict';
+
 var mainContainer;
 var board;
 
@@ -12,7 +13,7 @@ createBackground();
 
 
 function createScoreBoard() {
-    scoreBoard = document.createElement('div');
+    var scoreBoard = document.createElement('div');
     scoreBoard.id = 'score-board';
     mainContainer.appendChild(scoreBoard);
     var scoreBoardList = document.createElement('ul');
@@ -55,7 +56,7 @@ function createBoard() {
 createBoard();
 
 function createInfoBox() {
-    infobox = document.createElement('div');
+    var infobox = document.createElement('div');
     infobox.id = 'infobox';
     infobox.innerText = 'TEstTEstTEstTEstTEstTEstTEst TEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEst';
 	infobox.textContent='TEstTEstTEstTEstTEstTEstTEst TEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEst';
