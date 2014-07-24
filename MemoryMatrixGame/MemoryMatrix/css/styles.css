@@ -17,7 +17,6 @@ body {
 
 #main-container {
     width: 640px;
-    height: 480px;
     max-width: 90%;
     margin: 0 auto;
     padding: 0 4%;
@@ -38,6 +37,7 @@ body {
     background: lightgray;
     border-bottom-right-radius: 40px;
     border-bottom-left-radius: 40px;
+    margin-bottom: 50px;
 }
 
 #score-board .score-board-element {
@@ -58,7 +58,7 @@ body {
 
 #infobox {
     max-width: 90%;
-    margin-bottom: 15%;
+    margin: 20px 0;
     font-size: 0.8rem;
     -ms-word-wrap: break-word;
     word-wrap: break-word;
@@ -67,8 +67,6 @@ body {
 
 /* Start Board Styles */
 #board {
-    width: 70%;
-    height: 70%;
     margin: auto;
     background: #c9c9c9;
     padding: 0 5%;
@@ -90,5 +88,6 @@ body {
     border: 1px solid #a8a8a8;
     display: table-cell;
     border-collapse: collapse;
+    cursor: pointer;
 }
 /* End Board Styles */

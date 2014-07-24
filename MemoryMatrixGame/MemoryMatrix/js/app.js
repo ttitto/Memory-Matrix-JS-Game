@@ -3,6 +3,16 @@
 var mainContainer;
 var board;
 var currentLvl = 3; // 3 is the starting level
+var cellSize = 50;
+var wasLevelCleared = true;
+var minRowsSize = 3;
+var minCellsSize = 3;
+
+var ScoreBoardElement = function (imgURL, content, val) {
+    this.imgURL = imgURL;
+    this.content = content;
+    this.val = val;
+}
 
 function getLvl() {
     return currentLvl;
@@ -26,12 +36,12 @@ function createScoreBoard() {
         new ScoreBoardElement('', 'Trials', '0'),
         new ScoreBoardElement('', 'Score', '0')];
 
-    var len = categories.length;
-    for (var i = 0; i < len; i++) {
+    var categoriesSize = categories.length;
+    for (var i = 0; i < categoriesSize; i++) {
         var li = document.createElement('li');
         li.className = 'score-board-element';
         li.innerText = categories[i].content;
-		 li.textContent = categories[i].content;
+        li.textContent = categories[i].content;
         scoreBoardList.appendChild(li);
 
         var sp = document.createElement('span');
@@ -40,64 +50,61 @@ function createScoreBoard() {
 		sp.textContent = categories[i].val;
         li.appendChild(sp);
     }
-
-}
-var ScoreBoardElement = function (imgURL, content, val) {
-    this.imgURL = imgURL;
-    this.content = content;
-    this.val = val;
-
 }
 
 function getUserClick(event) {
     // This function handles the player click
-    console.log(event.toElement);
-    console.log(event);
+    var selectedCellID = event.target.getAttribute('id');
     
     // TODO: Update the user score
     // TODO: Update the info msg at the bottom
 }
 
-function goToNextLvl(canGoToNextLvl) {
-    canGoToNextLvl = (canGoToNextLvl === true) ? currentLvl++ :currentLvl--;
+function goToNextLvl() {
+    (wasLevelCleared === true) ? currentLvl++ :currentLvl--;
+    
+
     // TODO: Add this functionality
     // 1. Chech which is the current level and calc the board cells and rows
     // 2. Invoke "createBoard(cells, rows)" by giving in the correct number of cells and rows
-    // 3. The minimum cells AND rows numbers MUST BE 3x3.
-    createBoard(5, 6); // This is just a sample
+    // 3. The minimum size is 3x3.
+    // 4. The maximum size is 6x6
+    createBoard((Math.random() * (6 - 3) + 3).toFixed(0), (Math.random() * (6 - 3) + 3).toFixed(0)); // This is just a sample
 }
 
 function createBoard(cells, rows) {
-    cells = cells || 3;
-    rows = rows || 3;
-    var boardId = 'board'
+    cells = cells || minCellsSize;
+    rows = rows || minRowsSize;
+    var boardId = 'board';
 
     var board = document.getElementById(boardId);
     if(!board) {
         board = document.createElement('div');
-        board.id = 'board';
+        board.id = boardId;
         mainContainer.appendChild(board);
     }
     board.innerHTML = '';
     
     // Dynamic generation of the board sizes based on the number of cells
-//    board.style.width = ;
-//    board.style.height = ;
+    board.style.width = (cells * cellSize) + 60 + 'px'; // 60 is the board padding
+    board.style.height = (rows * cellSize) + 60 + 'px';
     
-    for(var i = 1;i <= rows; i++){
-        var row = document.createElement('div');
-        row.setAttribute('id', 'row'+i);
-        row.className = 'row';
-        for(var j = 1; j <= cells; j++) {
-            var cell = document.createElement('div');
-            cell.setAttribute('id', 'cell'+i+j);
-            cell.className = 'cell';
-            // Detects the player click
-            cell.addEventListener('click', getUserClick.bind(this), false);
-            row.appendChild(cell);
+    setTimeout(function(){
+        for(var i = 1;i <= rows; i++){
+            var row = document.createElement('div');
+            row.setAttribute('id', 'row'+i);
+            row.className = 'row';
+            for(var j = 1; j <= cells; j++) {
+                var cell = document.createElement('div');
+                cell.setAttribute('id', 'cell'+i+j);
+                cell.className = 'cell';
+                // Detects the player click
+                cell.addEventListener('click', getUserClick.bind(this), false);
+                row.appendChild(cell);
+            }
+            board.appendChild(row);
         }
-        board.appendChild(row)
-    }
+    }, 600);
 }
 
 function createInfoBox() {
