@@ -3,7 +3,7 @@
 var mainContainer,
     board,
     currentLvl = 3, // 3 is the starting level
-    tilesCounter = currentLvl, //Counter to hold the revealed answers
+    tilesCounter = 1, //Counter to hold the revealed answers
     levelBonus = 5, //holds the points that will be added if the level succeeds
     cellSize = 50,
     wasLevelCleared = true,
@@ -74,12 +74,19 @@ function addPoints(tilePts, levelPts) {
 function getUserClick(event) {
     // This function handles the player click
     var selectedCellID = event.target.getAttribute('id');    
-    if(tilesCounter <= getLvl()){
-        if(event.target.getAttribute('data-is-true')){    
+    console.log(tilesCounter);
+    if(event.target.getAttribute('data-is-true')){ 
+        if(tilesCounter < getLvl()){   
             console.log('correct'); 
-        }else{
-            console.log('not correct');
+            tilesCounter++;            
+        }else if(tilesCounter == getLvl()){
+            wasLevelCleared = true;
+            goToNextLvl();
         }
+    }else{
+        console.log('not correct');
+        wasLevelCleared = false;
+        goToNextLvl();
     }
 
     // TODO: Update the user score
@@ -94,6 +101,8 @@ function goToNextLvl() {
         trials--;
         document.getElementsByClassName('score-board-value')[1].innerHTML = trials;
         document.getElementsByClassName('score-board-value')[0].innerHTML = getLvl();
+        //clear counter
+        tilesCounter = 1;
         //generate new board
         var currLvl = getLvl();
         var board = (currLvl <= boardDimArray.length)? (currLvl-1) : (boardDimArray.length-1);
