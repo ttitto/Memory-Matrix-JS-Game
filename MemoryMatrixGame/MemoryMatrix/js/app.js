@@ -128,7 +128,36 @@ function createInfoBox() {
     mainContainer.appendChild(infobox);
 }
 
+function assignCorrectAnswers(level) {
 
+    var assignedIndexes = [];
+
+    var cellsArray = document.getElementsByClassName('cell');
+
+    var getRandomNumber = function () {
+        return Math.floor(Math.random() * cellsArray.length)
+    }
+
+
+    var canContinue = true;
+
+    for (var i = 0; i < level; i++) {
+        canContinue = true;
+
+        while (canContinue) {
+            var randomCellIndex = getRandomNumber();
+            if (assignedIndexes.indexOf(randomCellIndex) == -1) {
+                //-1 означава , че дадена клетка не се намира в списъка с вече избраните клетки
+                var cellElement = cellsArray[randomCellIndex];
+                cellElement.setAttribute('data-is-true', 'true');
+                assignedIndexes.push(randomCellIndex);
+                canContinue = false;
+            }
+        }
+    }
+    var answers = assignedIndexes.toString();
+    document.getElementById('indexes').innerHTML = answers;
+}
 
 createBackground();
 createScoreBoard();
