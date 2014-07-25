@@ -12,7 +12,7 @@ var mainContainer,
     trials = 15, //how many trials user has
     score = 0; //user score
 
-var boardDimArray = [[2,2],[2,2],[3,3],[4,3],[4,4],[5,4],[5,5],[6,5],[6,6]];
+var boardDimArray = [[2, 2], [2, 2], [3, 3], [4, 3], [4, 4], [5, 4], [5, 5], [6, 5], [6, 6]];
 
 
 var ScoreBoardElement = function (imgURL, content, val) {
@@ -73,21 +73,27 @@ function addPoints(tilePts, levelPts) {
 
 function getUserClick(event) {
     // This function handles the player click
-    var selectedCellID = event.target.getAttribute('id');        
-    if(event.target.getAttribute('data-is-true') && !event.target.getAttribute('data-is-ckicked')){ 
-        if(tilesCounter < getLvl()){ 
-            event.target.setAttribute('data-is-clicked','true');
-            console.log('correct'); 
+    var selectedCellID = event.target.getAttribute('id');
+    if (event.target.getAttribute('data-is-true') && !event.target.getAttribute('data-is-clicked')) {
+        if (tilesCounter < getLvl()) {
+            updateInfobox('tileSucess');
+            event.target.setAttribute('data-is-clicked', 'true');
+            console.log('correct');
             tilesCounter++;
-            event.target.setAttribute('data-is-true','false');          
-        }else if(tilesCounter == getLvl()){
-            event.target.setAttribute('data-is-clicked','true');
+            addPoints(10);
+            event.target.setAttribute('data-is-true', 'false');
+        } else if (tilesCounter == getLvl()) {
+            event.target.setAttribute('data-is-clicked', 'true');
+            updateInfobox('levelSuccess');
             wasLevelCleared = true;
+            addPoints(10, levelBonus);
+            levelBonus *= 2;
             goToNextLvl();
-            event.target.setAttribute('data-is-true','false');
+            event.target.setAttribute('data-is-true', 'false');
         }
-    }else{
+    } else {
         console.log('not correct');
+        updateInfobox('levelLost');
         wasLevelCleared = false;
         goToNextLvl();
     }
@@ -98,8 +104,8 @@ function getUserClick(event) {
 
 function goToNextLvl() {
 
-    (wasLevelCleared === true) ? currentLvl++ : currentLvl-- ;
-    if(trials){
+    (wasLevelCleared === true) ? currentLvl++ : currentLvl--;
+    if (trials) {
         //update trials in scoreboard
         trials--;
         document.getElementsByClassName('score-board-value')[1].innerHTML = trials;
@@ -109,11 +115,11 @@ function goToNextLvl() {
         tilesCounter = 1;
         //generate new board => Chech which is the current level and calc the board cells and rows
         var currLvl = getLvl();
-        var board = (currLvl <= boardDimArray.length)? (currLvl-1) : (boardDimArray.length-1);
+        var board = (currLvl <= boardDimArray.length) ? (currLvl - 1) : (boardDimArray.length - 1);
         // 2. Invoke "createBoard(cells, rows)" by giving in the correct number of cells and rows
-        createBoard(boardDimArray[board][0],boardDimArray[board][1]);
+        createBoard(boardDimArray[board][0], boardDimArray[board][1]);
         //createBoard((Math.random() * (6 - 3) + 3).toFixed(0), (Math.random() * (6 - 3) + 3).toFixed(0)); // This is just a sample
-    }else{
+    } else {
         //GAME OVER - no more trials. Function for displaying GAME OVER Screen here        
         alert('GAME OVER!\n Your score is: ' + score + '!');
     }
@@ -124,14 +130,14 @@ function goToNextLvl() {
 }
 
 function createBoard(cells, rows) {
-    if (cells){    
-        cells = ((cells) && (cells > 2)) ? ((cells<6) ? cells : maxCellsSize) : minCellsSize;
-    }else{
+    if (cells) {
+        cells = ((cells) && (cells > 2)) ? ((cells < 6) ? cells : maxCellsSize) : minCellsSize;
+    } else {
         cells = 3;
     }
     if (rows) {
-        rows = ((rows) && (rows > 2)) ? ((rows<6) ? rows : maxRowsSize) : minRowsSize;
-    }else{
+        rows = ((rows) && (rows > 2)) ? ((rows < 6) ? rows : maxRowsSize) : minRowsSize;
+    } else {
         rows = 3;
     }
     var boardId = 'board',
@@ -149,14 +155,14 @@ function createBoard(cells, rows) {
     board.style.width = (cells * cellSize) + 60 + 'px'; // 60 is the board padding
     board.style.height = (rows * cellSize) + 60 + 'px';
 
-    setTimeout(function(){
-        for(var i = 1;i <= rows; i++){
+    setTimeout(function () {
+        for (var i = 1; i <= rows; i++) {
             var row = document.createElement('div');
-            row.setAttribute('id', 'row'+i);
+            row.setAttribute('id', 'row' + i);
             row.className = 'row';
-            for(var j = 1; j <= cells; j++) {
+            for (var j = 1; j <= cells; j++) {
                 var cell = document.createElement('div');
-                cell.setAttribute('id', 'cell'+i+j);
+                cell.setAttribute('id', 'cell' + i + j);
                 cell.className = 'cell';
                 // Detects the player click -  moved in showPatternToPlayer func.
                 //cell.addEventListener('click', getUserClick.bind(this), false);
@@ -171,22 +177,34 @@ function createBoard(cells, rows) {
 function createInfoBox() {
     var infobox = document.createElement('div');
     infobox.id = 'infobox';
-    infobox.innerText = 'TEstTEstTEstTEstTEstTEstTEst TEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEst';
-    infobox.textContent = 'TEstTEstTEstTEstTEstTEstTEst TEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEstTEstTEstTEstTE stTEstTEstTEstTEstTEstTEst';
     mainContainer.appendChild(infobox);
 }
 
+function updateInfobox(occasion) {
+    var cases = {
+        levelLost: 'Sorry, you missed!\nTry again with less tiles!',
+        tileSucess: 'You hit it right! Guess the next tile!',
+        levelSuccess: 'Congratulations! You won another level.\nTry with more tiles!',
+        guess: 'Guess the next tile!'
+    }
+
+    var infobox = document.getElementById('infobox');
+    infobox.innerText = cases[occasion];
+    infobox.textContent = cases[occasion];
+}
+
+
 function assignCorrectAnswers(level) {
 
-    var assignedIndexes = [], 
-        selectedCells  = [],
+    var assignedIndexes = [],
+        selectedCells = [],
         cellsArray = document.getElementsByClassName('cell'),
         canContinue = true;
-    
+
     var getRandomNumber = function () {
         return Math.floor(Math.random() * cellsArray.length)
     }
-    
+
     for (var i = 0; i < level; i++) {
         canContinue = true;
 
@@ -203,31 +221,31 @@ function assignCorrectAnswers(level) {
         }
     }
 
-    answers = (answers != "")? answers : "";
+    answers = (answers != "") ? answers : "";
     answers = assignedIndexes.toString();
 
     //show the pattern to player
-    for(var el in selectedCells){
+    for (var el in selectedCells) {
         selectedCells[el].style.background = 'red';
     }
 
     //hide the pattern and assign onClick event listener     
-    setTimeout(function(){
+    setTimeout(function () {
         hidePattern(selectedCells);
-    },2000);    
+    }, 2000);
 }
 
-function hidePattern(selectedCellsPattern){
-    for(var el in selectedCellsPattern){
-        selectedCellsPattern[el].style.background ='#e3e3e3';           
+function hidePattern(selectedCellsPattern) {
+    for (var el in selectedCellsPattern) {
+        selectedCellsPattern[el].style.background = '#e3e3e3';
     }
-    for(var i = 0; i<document.getElementsByClassName('cell').length; i++){
-        document.getElementsByClassName('cell')[i].addEventListener('click', getUserClick.bind(this), false); 
-    }    
+    for (var i = 0; i < document.getElementsByClassName('cell').length; i++) {
+        document.getElementsByClassName('cell')[i].addEventListener('click', getUserClick.bind(this), false);
+    }
+    updateInfobox('guess');
 }
 
 createBackground();
 createScoreBoard();
 createBoard();
 createInfoBox();
-addPoints(10);
