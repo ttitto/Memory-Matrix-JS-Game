@@ -90,7 +90,11 @@ body {
     border-collapse: collapse;
     cursor: pointer;
 }
-.cell[data-is-true=true]{
+.cell[data-is-true=true], .cell[data-is-clicked=true] {
     background-color: red;
+}
+
+.cell[data-is-clicked=true]{
+    background: red!important;
 }
 /* End Board Styles */

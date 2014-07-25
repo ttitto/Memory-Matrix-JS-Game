@@ -73,15 +73,19 @@ function addPoints(tilePts, levelPts) {
 
 function getUserClick(event) {
     // This function handles the player click
-    var selectedCellID = event.target.getAttribute('id');    
-    console.log(tilesCounter);
-    if(event.target.getAttribute('data-is-true')){ 
-        if(tilesCounter < getLvl()){   
+    var selectedCellID = event.target.getAttribute('id');        
+    if(event.target.getAttribute('data-is-true') && !event.target.getAttribute('data-is-ckicked')){ 
+        console.log(tilesCounter);
+        if(tilesCounter < getLvl()){ 
+            event.target.setAttribute('data-is-clicked','true');
             console.log('correct'); 
-            tilesCounter++;            
+            tilesCounter++;
+            event.target.setAttribute('data-is-true','false');          
         }else if(tilesCounter == getLvl()){
+            event.target.setAttribute('data-is-clicked','true');
             wasLevelCleared = true;
             goToNextLvl();
+            event.target.setAttribute('data-is-true','false');
         }
     }else{
         console.log('not correct');
@@ -148,7 +152,7 @@ function createBoard(cells, rows) {
                 cell.setAttribute('id', 'cell'+i+j);
                 cell.className = 'cell';
                 // Detects the player click
-                cell.addEventListener('click', getUserClick.bind(this), false);
+                //cell.addEventListener('click', getUserClick.bind(this), false);
                 row.appendChild(cell);
             }
             board.appendChild(row);
@@ -167,7 +171,7 @@ function createInfoBox() {
 
 function assignCorrectAnswers(level) {
 
-    var assignedIndexes = [];
+    var assignedIndexes = [], selectedCells  = [];
 
     var cellsArray = document.getElementsByClassName('cell');
     console.log(cellsArray.length);
@@ -176,7 +180,7 @@ function assignCorrectAnswers(level) {
     }
 
     var canContinue = true;
-
+    
     for (var i = 0; i < level; i++) {
         canContinue = true;
 
@@ -185,6 +189,7 @@ function assignCorrectAnswers(level) {
             if (assignedIndexes.indexOf(randomCellIndex) == -1) {
                 //-1 означава , че дадена клетка не се намира в списъка с вече избраните клетки
                 var cellElement = cellsArray[randomCellIndex];
+                selectedCells.push(cellElement);
                 cellElement.setAttribute('data-is-true', 'true');
                 assignedIndexes.push(randomCellIndex);
                 canContinue = false;
@@ -193,7 +198,27 @@ function assignCorrectAnswers(level) {
     }
     answers = (answers != "")? answers : "";
     answers = assignedIndexes.toString();
-    //document.getElementById('indexes').innerHTML = answers;    
+    //document.getElementById('indexes').innerHTML = answers;
+    console.log(selectedCells);
+    for(var el in selectedCells){
+        console.log(selectedCells[el]);
+        selectedCells[el].style.background = 'red';
+    }
+    console.log('before');
+    setTimeout(function(){
+        showPatternToPlayer(selectedCells)
+    },2000);
+    console.log('after');
+
+}
+function showPatternToPlayer(selectedCellsPattern){
+    for(var el in selectedCellsPattern){
+        console.log(selectedCellsPattern[el]);
+        selectedCellsPattern[el].style.background ='#e3e3e3';           
+    }
+    for(var i = 0; i<document.getElementsByClassName('cell').length; i++){
+        document.getElementsByClassName('cell')[i].addEventListener('click', getUserClick.bind(this), false); 
+    }    
 }
 
 createBackground();
