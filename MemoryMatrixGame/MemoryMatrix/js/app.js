@@ -1,14 +1,17 @@
 ﻿'use strict';
+//GLOBALS
+var mainContainer,
+    board,
+    currentLvl = 3, // 3 is the starting level
+    tilesCounter = currentLvl, //Counter to hold the revealed answers
+    levelBonus = 5, //holds the points that will be added if the level succeeds
+    cellSize = 50,
+    wasLevelCleared = true,
+    minRowsSize = 2, minCellsSize = 2, maxRowsSize = 6, maxCellsSize = 6,
+    answers = "",
+    trials = 15, //how many trials user has
+    score = 0; //user score
 
-var mainContainer;
-var board;
-var currentLvl = 3; // 3 is the starting level
-var levelBonus = 5; //holds the points that will be added if the level succeeds
-var cellSize = 50;
-var wasLevelCleared = true;
-var minRowsSize = 3;
-var minCellsSize = 3;
-var answers = "";
 var ScoreBoardElement = function (imgURL, content, val) {
     this.imgURL = imgURL;
     this.content = content;
@@ -33,9 +36,9 @@ function createScoreBoard() {
     var scoreBoardList = document.createElement('ul');
     scoreBoard.appendChild(scoreBoardList);
 
-    var categories = [new ScoreBoardElement('', 'Tiles', '0'),
-        new ScoreBoardElement('', 'Trials', '0'),
-        new ScoreBoardElement('', 'Score', '0')];
+    var categories = [new ScoreBoardElement('', 'Tiles', getLvl()),
+        new ScoreBoardElement('', 'Trials', trials),
+        new ScoreBoardElement('', 'Score', score)];
 
     var categoriesSize = categories.length;
     for (var i = 0; i < categoriesSize; i++) {
@@ -67,28 +70,40 @@ function addPoints(tilePts, levelPts) {
 
 function getUserClick(event) {
     // This function handles the player click
-    var selectedCellID = event.target.getAttribute('id');        
-    if(event.target.getAttribute('data-is-true')){
-        console.log('correct'); 
-    }else{
-        console.log('not correct');
+    var selectedCellID = event.target.getAttribute('id');    
+    if(tilesCounter <= getLvl()){
+        if(event.target.getAttribute('data-is-true')){    
+            console.log('correct'); 
+        }else{
+            console.log('not correct');
+        }
     }
-    
 
     // TODO: Update the user score
     // TODO: Update the info msg at the bottom
 }
 
 function goToNextLvl() {
-    (wasLevelCleared === true) ? currentLvl++ :currentLvl--;
-    
+
+    (wasLevelCleared === true) ? currentLvl++ : currentLvl-- ;
+    if(trials){
+        //update trials in scoreboard
+        trials--;
+        document.getElementsByClassName('score-board-value')[1].innerHTML = trials;
+        document.getElementsByClassName('score-board-value')[0].innerHTML = getLvl();
+        //generate new board
+        createBoard((Math.random() * (6 - 3) + 3).toFixed(0), (Math.random() * (6 - 3) + 3).toFixed(0)); // This is just a sample
+    }else{
+        //GAME OVER - no more trials. Function for displaying GAME OVER Screen here        
+        alert('GAME OVER!\n Your score is: ' + score + '!');
+    }
 
     // TODO: Add this functionality
     // 1. Chech which is the current level and calc the board cells and rows
     // 2. Invoke "createBoard(cells, rows)" by giving in the correct number of cells and rows
     // 3. The minimum size is 2x2.
     // 4. The maximum size is 6x6
-    createBoard((Math.random() * (6 - 3) + 3).toFixed(0), (Math.random() * (6 - 3) + 3).toFixed(0)); // This is just a sample
+    
 }
 
 function createBoard(cells, rows) {
