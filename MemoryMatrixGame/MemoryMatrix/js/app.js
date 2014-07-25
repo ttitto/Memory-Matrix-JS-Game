@@ -75,7 +75,6 @@ function getUserClick(event) {
     // This function handles the player click
     var selectedCellID = event.target.getAttribute('id');        
     if(event.target.getAttribute('data-is-true') && !event.target.getAttribute('data-is-ckicked')){ 
-        console.log(tilesCounter);
         if(tilesCounter < getLvl()){ 
             event.target.setAttribute('data-is-clicked','true');
             console.log('correct'); 
@@ -104,12 +103,14 @@ function goToNextLvl() {
         //update trials in scoreboard
         trials--;
         document.getElementsByClassName('score-board-value')[1].innerHTML = trials;
+        //update Tiles in scoreboard
         document.getElementsByClassName('score-board-value')[0].innerHTML = getLvl();
         //clear counter
         tilesCounter = 1;
-        //generate new board
+        //generate new board => Chech which is the current level and calc the board cells and rows
         var currLvl = getLvl();
         var board = (currLvl <= boardDimArray.length)? (currLvl-1) : (boardDimArray.length-1);
+        // 2. Invoke "createBoard(cells, rows)" by giving in the correct number of cells and rows
         createBoard(boardDimArray[board][0],boardDimArray[board][1]);
         //createBoard((Math.random() * (6 - 3) + 3).toFixed(0), (Math.random() * (6 - 3) + 3).toFixed(0)); // This is just a sample
     }else{
@@ -117,25 +118,31 @@ function goToNextLvl() {
         alert('GAME OVER!\n Your score is: ' + score + '!');
     }
 
-    // TODO: Add this functionality
-    // 1. Chech which is the current level and calc the board cells and rows
-    // 2. Invoke "createBoard(cells, rows)" by giving in the correct number of cells and rows
-    // 3. The minimum size is 2x2.
-    // 4. The maximum size is 6x6
-    
+    // TODO: Add this functionality        
+    // 3. The minimum size is 2x2. - done!
+    // 4. The maximum size is 6x6  - done!  
 }
 
 function createBoard(cells, rows) {
-    cells = ((cells) && (cells > 2)) ? ((cells<6) ? cells : maxCellsSize) : minCellsSize;
-    rows = ((rows) && (rows > 2)) ? ((rows<6) ? rows : maxRowsSize) : minRowsSize;
-    var boardId = 'board';
+    if (cells){    
+        cells = ((cells) && (cells > 2)) ? ((cells<6) ? cells : maxCellsSize) : minCellsSize;
+    }else{
+        cells = 3;
+    }
+    if (rows) {
+        rows = ((rows) && (rows > 2)) ? ((rows<6) ? rows : maxRowsSize) : minRowsSize;
+    }else{
+        rows = 3;
+    }
+    var boardId = 'board',
+        board = document.getElementById(boardId);
 
-    var board = document.getElementById(boardId);
     if (!board) {
         board = document.createElement('div');
         board.id = boardId;
         mainContainer.appendChild(board);
     }
+
     board.innerHTML = '';
 
     // Dynamic generation of the board sizes based on the number of cells
@@ -151,7 +158,7 @@ function createBoard(cells, rows) {
                 var cell = document.createElement('div');
                 cell.setAttribute('id', 'cell'+i+j);
                 cell.className = 'cell';
-                // Detects the player click
+                // Detects the player click -  moved in showPatternToPlayer func.
                 //cell.addEventListener('click', getUserClick.bind(this), false);
                 row.appendChild(cell);
             }
@@ -171,15 +178,14 @@ function createInfoBox() {
 
 function assignCorrectAnswers(level) {
 
-    var assignedIndexes = [], selectedCells  = [];
-
-    var cellsArray = document.getElementsByClassName('cell');
-    console.log(cellsArray.length);
+    var assignedIndexes = [], 
+        selectedCells  = [],
+        cellsArray = document.getElementsByClassName('cell'),
+        canContinue = true;
+    
     var getRandomNumber = function () {
         return Math.floor(Math.random() * cellsArray.length)
     }
-
-    var canContinue = true;
     
     for (var i = 0; i < level; i++) {
         canContinue = true;
@@ -196,24 +202,23 @@ function assignCorrectAnswers(level) {
             }
         }
     }
+
     answers = (answers != "")? answers : "";
     answers = assignedIndexes.toString();
-    //document.getElementById('indexes').innerHTML = answers;
-    console.log(selectedCells);
+
+    //show the pattern to player
     for(var el in selectedCells){
-        console.log(selectedCells[el]);
         selectedCells[el].style.background = 'red';
     }
-    console.log('before');
-    setTimeout(function(){
-        showPatternToPlayer(selectedCells)
-    },2000);
-    console.log('after');
 
+    //hide the pattern and assign onClick event listener     
+    setTimeout(function(){
+        hidePattern(selectedCells);
+    },2000);    
 }
-function showPatternToPlayer(selectedCellsPattern){
+
+function hidePattern(selectedCellsPattern){
     for(var el in selectedCellsPattern){
-        console.log(selectedCellsPattern[el]);
         selectedCellsPattern[el].style.background ='#e3e3e3';           
     }
     for(var i = 0; i<document.getElementsByClassName('cell').length; i++){
