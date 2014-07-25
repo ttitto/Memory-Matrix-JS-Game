@@ -12,6 +12,9 @@ var mainContainer,
     trials = 15, //how many trials user has
     score = 0; //user score
 
+var boardDimArray = [[2,2],[2,2],[3,3],[4,3],[4,4],[5,4],[5,5],[6,5],[6,6]];
+
+
 var ScoreBoardElement = function (imgURL, content, val) {
     this.imgURL = imgURL;
     this.content = content;
@@ -92,7 +95,10 @@ function goToNextLvl() {
         document.getElementsByClassName('score-board-value')[1].innerHTML = trials;
         document.getElementsByClassName('score-board-value')[0].innerHTML = getLvl();
         //generate new board
-        createBoard((Math.random() * (6 - 3) + 3).toFixed(0), (Math.random() * (6 - 3) + 3).toFixed(0)); // This is just a sample
+        var currLvl = getLvl();
+        var board = (currLvl <= boardDimArray.length)? (currLvl-1) : (boardDimArray.length-1);
+        createBoard(boardDimArray[board][0],boardDimArray[board][1]);
+        //createBoard((Math.random() * (6 - 3) + 3).toFixed(0), (Math.random() * (6 - 3) + 3).toFixed(0)); // This is just a sample
     }else{
         //GAME OVER - no more trials. Function for displaying GAME OVER Screen here        
         alert('GAME OVER!\n Your score is: ' + score + '!');
