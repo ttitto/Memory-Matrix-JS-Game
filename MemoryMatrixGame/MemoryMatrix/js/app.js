@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 //GLOBALS
 var mainContainer,
     board,
@@ -10,9 +10,17 @@ var mainContainer,
     minRowsSize = 2, minCellsSize = 2, maxRowsSize = 6, maxCellsSize = 6,
     answers = "",
     trials = 15, //how many trials user has
-    score = 0; //user score
+    score = 0, //user score
+    timeBeforeHideCells = 2000;
 
 var boardDimArray = [[2, 2], [2, 2], [3, 3], [4, 3], [4, 4], [5, 4], [5, 5], [6, 5], [6, 6]];
+
+var MESSAGES = {
+        levelLost: 'Sorry, you missed!\nTry again with less tiles!',
+        tileSucess: 'You hit it right! Guess the next tile!',
+        levelSuccess: 'Congratulations! You won another level.\nTry with more tiles!',
+        guess: 'Guess the next tile!'
+    }
 
 
 var ScoreBoardElement = function (imgURL, content, val) {
@@ -183,16 +191,9 @@ function createInfoBox() {
 }
 
 function updateInfobox(occasion) {
-    var cases = {
-        levelLost: 'Sorry, you missed!\nTry again with less tiles!',
-        tileSucess: 'You hit it right! Guess the next tile!',
-        levelSuccess: 'Congratulations! You won another level.\nTry with more tiles!',
-        guess: 'Guess the next tile!'
-    }
-
     var infobox = document.getElementById('infobox');
-    infobox.innerText = cases[occasion];
-    infobox.textContent = cases[occasion];
+    infobox.innerText = MESSAGES[occasion];
+    infobox.textContent = MESSAGES[occasion];
 }
 
 
@@ -227,20 +228,21 @@ function assignCorrectAnswers(level) {
     answers = assignedIndexes.toString();
 
     //show the pattern to player
-    for (var el in selectedCells) {
-        selectedCells[el].classList.add('openAnswer');
+    for(var i = 0; i < selectedCells.length; i++) {
+        selectedCells[i].classList.add("openAnswer");
     }
 
     //hide the pattern and assign onClick event listener     
     setTimeout(function () {
         hidePattern(selectedCells);
-    }, 2000);
+    }, timeBeforeHideCells);
 }
 
 function hidePattern(selectedCellsPattern){
-    for(var el in selectedCellsPattern){
-        selectedCellsPattern[el].classList.remove('openAnswer');
+    for(var i = 0; i < selectedCellsPattern.length; i++) {
+        selectedCellsPattern[i].classList.remove("openAnswer");
     }
+
     for (var i = 0; i < document.getElementsByClassName('cell').length; i++) {
         document.getElementsByClassName('cell')[i].addEventListener('click', getUserClick.bind(this), false);
     }

@@ -90,11 +90,12 @@ body {
     border-collapse: collapse;
     cursor: pointer;
 }
-.cell[data-is-true=true], .cell[data-is-clicked=true] {
+.openAnswer.cell[data-is-true=true], 
+.cell[data-is-clicked=true] {
     background-color: red;
 }
 
-.openAnswer.cell[data-is-clicked=true] {
-    background: red;
+cell[data-is-tru=true] {
+    background-color: transparent;
 }
 /* End Board Styles */
