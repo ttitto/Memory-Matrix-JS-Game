@@ -8,7 +8,7 @@ var cellSize = 50;
 var wasLevelCleared = true;
 var minRowsSize = 3;
 var minCellsSize = 3;
-
+var answers = "";
 var ScoreBoardElement = function (imgURL, content, val) {
     this.imgURL = imgURL;
     this.content = content;
@@ -67,7 +67,13 @@ function addPoints(tilePts, levelPts) {
 
 function getUserClick(event) {
     // This function handles the player click
-    var selectedCellID = event.target.getAttribute('id');
+    var selectedCellID = event.target.getAttribute('id');        
+    if(event.target.getAttribute('data-is-true')){
+        console.log('correct'); 
+    }else{
+        console.log('not correct');
+    }
+    
 
     // TODO: Update the user score
     // TODO: Update the info msg at the bottom
@@ -117,6 +123,7 @@ function createBoard(cells, rows) {
             }
             board.appendChild(row);
         }
+        assignCorrectAnswers(getLvl());
     }, 600);
 }
 
@@ -133,11 +140,10 @@ function assignCorrectAnswers(level) {
     var assignedIndexes = [];
 
     var cellsArray = document.getElementsByClassName('cell');
-
+    console.log(cellsArray.length);
     var getRandomNumber = function () {
         return Math.floor(Math.random() * cellsArray.length)
     }
-
 
     var canContinue = true;
 
@@ -155,8 +161,9 @@ function assignCorrectAnswers(level) {
             }
         }
     }
-    var answers = assignedIndexes.toString();
-    document.getElementById('indexes').innerHTML = answers;
+    answers = (answers != "")? answers : "";
+    answers = assignedIndexes.toString();
+    //document.getElementById('indexes').innerHTML = answers;    
 }
 
 createBackground();

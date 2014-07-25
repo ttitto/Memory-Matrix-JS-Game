@@ -90,4 +90,7 @@ body {
     border-collapse: collapse;
     cursor: pointer;
 }
+.cell[data-is-true=true]{
+    background-color: red;
+}
 /* End Board Styles */
