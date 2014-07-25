@@ -107,8 +107,8 @@ function goToNextLvl() {
 }
 
 function createBoard(cells, rows) {
-    cells = cells || minCellsSize;
-    rows = rows || minRowsSize;
+    cells = ((cells) && (cells > 2)) ? ((cells<6) ? cells : maxCellsSize) : minCellsSize;
+    rows = ((rows) && (rows > 2)) ? ((rows<6) ? rows : maxRowsSize) : minRowsSize;
     var boardId = 'board';
 
     var board = document.getElementById(boardId);
