@@ -126,7 +126,8 @@ function goToNextLvl() {
 
     // TODO: Add this functionality        
     // 3. The minimum size is 2x2. - done!
-    // 4. The maximum size is 6x6  - done!  
+    // 4. The maximum size is 6x6  - done! 
+    // 5. Check for tiles = 1 as the lowest possible tiles count. 
 }
 
 function createBoard(cells, rows) {
