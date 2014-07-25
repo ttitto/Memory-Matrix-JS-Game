@@ -94,7 +94,7 @@ body {
     background-color: red;
 }
 
-.cell[data-is-clicked=true]{
-    background: red!important;
+.openAnswer.cell[data-is-clicked=true] {
+    background: red;
 }
 /* End Board Styles */

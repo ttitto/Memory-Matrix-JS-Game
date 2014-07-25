@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 //GLOBALS
 var mainContainer,
     board,
@@ -64,7 +64,7 @@ function addPoints(tilePts, levelPts) {
     //increases the score by given amount of points passed as parameters
     levelPts = levelPts || 0;
     var scoreSpan = document.getElementsByClassName('score-board-value')[2];
-    console.log(scoreSpan);
+
     var score = scoreSpan.innerText || scoreSpan.textContent;
     score = parseInt(score) + parseInt(tilePts) + parseInt(levelPts);
     scoreSpan.innerText = score;
@@ -73,20 +73,23 @@ function addPoints(tilePts, levelPts) {
 
 function getUserClick(event) {
     // This function handles the player click
-    var selectedCellID = event.target.getAttribute('id');        
-    if(event.target.getAttribute('data-is-true') && !event.target.getAttribute('data-is-ckicked')){ 
-        if(tilesCounter < getLvl()){ 
-            event.target.setAttribute('data-is-clicked','true');
-            console.log('correct'); 
+    var selectedCellID = event.target.getAttribute('id');
+    var element = event.target;
+    if(event.target.getAttribute('data-is-true') && !event.target.getAttribute('data-is-ckicked')){
+        var currLevel = getLvl();
+        if(tilesCounter < currLevel){
+            element.setAttribute('data-is-clicked','true');
+            console.log('correct');
             tilesCounter++;
-            event.target.setAttribute('data-is-true','false');          
-        }else if(tilesCounter == getLvl()){
-            event.target.setAttribute('data-is-clicked','true');
+            element.setAttribute('data-is-true','false');
+
+        } else if(tilesCounter == currLevel) {
+            element.setAttribute('data-is-clicked','true');
             wasLevelCleared = true;
             goToNextLvl();
-            event.target.setAttribute('data-is-true','false');
+            element.setAttribute('data-is-true','false');
         }
-    }else{
+    } else {
         console.log('not correct');
         wasLevelCleared = false;
         goToNextLvl();
@@ -99,7 +102,7 @@ function getUserClick(event) {
 function goToNextLvl() {
 
     (wasLevelCleared === true) ? currentLvl++ : currentLvl-- ;
-    if(trials){
+    if(trials) {
         //update trials in scoreboard
         trials--;
         document.getElementsByClassName('score-board-value')[1].innerHTML = trials;
@@ -113,7 +116,7 @@ function goToNextLvl() {
         // 2. Invoke "createBoard(cells, rows)" by giving in the correct number of cells and rows
         createBoard(boardDimArray[board][0],boardDimArray[board][1]);
         //createBoard((Math.random() * (6 - 3) + 3).toFixed(0), (Math.random() * (6 - 3) + 3).toFixed(0)); // This is just a sample
-    }else{
+    } else {
         //GAME OVER - no more trials. Function for displaying GAME OVER Screen here        
         alert('GAME OVER!\n Your score is: ' + score + '!');
     }
@@ -159,7 +162,7 @@ function createBoard(cells, rows) {
                 cell.setAttribute('id', 'cell'+i+j);
                 cell.className = 'cell';
                 // Detects the player click -  moved in showPatternToPlayer func.
-                //cell.addEventListener('click', getUserClick.bind(this), false);
+                // cell.addEventListener('click', getUserClick.bind(this), false);
                 row.appendChild(cell);
             }
             board.appendChild(row);
@@ -193,10 +196,10 @@ function assignCorrectAnswers(level) {
         while (canContinue) {
             var randomCellIndex = getRandomNumber();
             if (assignedIndexes.indexOf(randomCellIndex) == -1) {
-                //-1 означава , че дадена клетка не се намира в списъка с вече избраните клетки
                 var cellElement = cellsArray[randomCellIndex];
                 selectedCells.push(cellElement);
                 cellElement.setAttribute('data-is-true', 'true');
+
                 assignedIndexes.push(randomCellIndex);
                 canContinue = false;
             }
@@ -208,18 +211,18 @@ function assignCorrectAnswers(level) {
 
     //show the pattern to player
     for(var el in selectedCells){
-        selectedCells[el].style.background = 'red';
+        selectedCells[el].classList.add('openAnswer');
     }
 
     //hide the pattern and assign onClick event listener     
     setTimeout(function(){
         hidePattern(selectedCells);
-    },2000);    
+    }, 2000);    
 }
 
 function hidePattern(selectedCellsPattern){
     for(var el in selectedCellsPattern){
-        selectedCellsPattern[el].style.background ='#e3e3e3';           
+        selectedCellsPattern[el].classList.remove('openAnswer');
     }
     for(var i = 0; i<document.getElementsByClassName('cell').length; i++){
         document.getElementsByClassName('cell')[i].addEventListener('click', getUserClick.bind(this), false); 
