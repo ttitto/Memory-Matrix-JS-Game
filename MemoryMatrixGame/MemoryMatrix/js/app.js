@@ -1,26 +1,40 @@
 'use strict';
 //GLOBALS
 var mainContainer,
+    boardContainer,
     board,
-    currentLvl = 3, // 3 is the starting level
-    tilesCounter = 1, //Counter to hold the revealed answers
-    levelBonus = 5, //holds the points that will be added if the level succeeds
-    cellSize = 50,
-    wasLevelCleared = true,
-    minRowsSize = 2, minCellsSize = 2, maxRowsSize = 6, maxCellsSize = 6,
-    answers = "",
-    trials = 15, //how many trials user has
-    score = 0, //user score
-    timeBeforeHideCells = 2000;
+    boardId         = 'board',
+    boardContainerID= 'boardCont',
+    currentLvl      = 3, // 3 is the starting level
+    tilesCounter    = 1, //Counter to hold the revealed answers
+    levelBonus      = 5, //holds the points that will be added if the level succeeds
+    cellSize        = 50,
+    pointsForCorrectAnswer  = 10,
+    wasLevelCleared         = true,
+    minRowsSize     = 2,
+    minCellsSize    = 2,
+    initCellsSize   = 3,
+    initRowsSize    = 3,
+    maxRowsSize     = 6,
+    maxCellsSize    = 6,
+    boardPadding    = 60,
+    answers         = '',
+    trials          = 15, //how many trials user has
+    score           = 0, //user score
+    beforeHideCellsTimeout  = 2000,
+    correctAnswerTimeout    = 600,
+    board = null,
+    popup = null;
 
 var boardDimArray = [[2, 2], [2, 2], [3, 3], [4, 3], [4, 4], [5, 4], [5, 5], [6, 5], [6, 6]];
 
 var MESSAGES = {
-        levelLost: 'Sorry, you missed!\nTry again with less tiles!',
-        tileSucess: 'You hit it right! Guess the next tile!',
-        levelSuccess: 'Congratulations! You won another level.\nTry with more tiles!',
-        guess: 'Guess the next tile!'
-    }
+    levelLost: 'Sorry, you missed!\nTry again with less tiles!',
+    tileSucess: 'You hit it right! Guess the next tile!',
+    levelSuccess: 'Congratulations! You won another level.\nTry with more tiles!',
+    guess: 'Guess the next tile!',
+    gameOver: 'GAME OVER!\n Your score is: '
+}
 
 
 var ScoreBoardElement = function (imgURL, content, val) {
@@ -66,7 +80,6 @@ function createScoreBoard() {
         sp.textContent = categories[i].val;
         li.appendChild(sp);
     }
-
 }
 
 function addPoints(tilePts, levelPts) {
@@ -92,93 +105,106 @@ function updateLevelBonus(direction) {
 }
 function getUserClick(event) {
     // This function handles the player click
-    var selectedCellID = event.target.getAttribute('id');
     var element = event.target;
-    if(event.target.getAttribute('data-is-true') && !event.target.getAttribute('data-is-ckicked')){
+    var selectedCellID = element.getAttribute('id');
+    if (element.getAttribute('data-is-true') && !element.getAttribute('data-is-ckicked')) {
         var currLevel = getLvl();
-        if(tilesCounter < currLevel){
-            element.setAttribute('data-is-clicked','true');
-            console.log('correct');
+
+        if (tilesCounter < currLevel) {
+            element.setAttribute('data-is-clicked', 'true');
             tilesCounter++;
-            addPoints(10);
-            event.target.setAttribute('data-is-true', 'false');
-        } else if(tilesCounter == currLevel) {
-            element.setAttribute('data-is-clicked','true');
-            updateInfobox('levelSuccess');
+            addPoints(pointsForCorrectAnswer);
+            element.setAttribute('data-is-true', 'false');
+
+        } else if (tilesCounter == currLevel) {
+            element.setAttribute('data-is-clicked', 'true');
+            updateInfobox(MESSAGES.levelSuccess);
             wasLevelCleared = true;
-            addPoints(10, levelBonus);
+            addPoints(pointsForCorrectAnswer, levelBonus);
+            element.setAttribute('data-is-true', 'false');
+            prepAndShowInfoForNextLvl();
             updateLevelBonus('up');
-            goToNextLvl();
-            element.setAttribute('data-is-true','false');
         }
     } else {
-        console.log('not correct');
-        updateInfobox('levelLost');
-        updateLevelBonus('down');
-        wasLevelCleared = false;
-        goToNextLvl();
+        element.classList.add('incorrectAnswer');
+        setTimeout(function(){
+            updateInfobox(MESSAGES.levelLost);
+            wasLevelCleared = false;
+
+            prepAndShowInfoForNextLvl();
+        }, 500);
     }
 }
 
 function goToNextLvl() {
-
-    if (wasLevelCleared === true) {
-        currentLvl++;
-    } else if (currentLvl > 1) {
-        currentLvl--;
-    }
-
-
     if(trials) {
         //update trials in scoreboard
         trials--;
         document.getElementById('Trials').innerHTML = trials;
+
         //update Tiles in scoreboard
         document.getElementById('Tiles').innerHTML = getLvl();
+
         //clear counter
         tilesCounter = 1;
+
         //generate new board => Chech which is the current level and calc the board cells and rows
         var currLvl = getLvl();
         var board = (currLvl <= boardDimArray.length) ? (currLvl - 1) : (boardDimArray.length - 1);
-        // 2. Invoke "createBoard(cells, rows)" by giving in the correct number of cells and rows
-        createBoard(boardDimArray[board][0], boardDimArray[board][1]);
-        //createBoard((Math.random() * (6 - 3) + 3).toFixed(0), (Math.random() * (6 - 3) + 3).toFixed(0)); // This is just a sample
-    } else {
-        //GAME OVER - no more trials. Function for displaying GAME OVER Screen here        
-        alert('GAME OVER!\n Your score is: ' + score + '!');
-    }
 
-    // TODO: Add this functionality        
-    // 3. The minimum size is 2x2. - done!
-    // 4. The maximum size is 6x6  - done! 
-    // 5. Check for tiles = 1 as the lowest possible tiles count. 
+        // Invokes "createBoard(cells, rows)" by giving in the correct number of cells and rows
+        createBoard(boardDimArray[board][0], boardDimArray[board][1]);
+    } else {
+        //GAME OVER - no more trials. Function for displaying GAME OVER Screen here
+        alert(MESSAGES.gameOver + score + '!');
+    }
+}
+
+function updatePopupSize(width, height) {
+    if(popup)  {
+        width = width || board.offsetWidth;
+        height = height || board.offsetHeight;
+
+        popup.style.width = width + 'px';
+        popup.style.height = height + 'px';
+        popup.style.left = -(width/2) + 'px';
+    }
+}
+
+function updateBoardAndPopupSizes(cells, rows) {
+    var width = (cells * cellSize) + boardPadding;
+    var height = (rows * cellSize) + boardPadding;
+    board.style.width = width  + 'px';
+    board.style.height = height + 'px';
+
+    updatePopupSize(width, height);
 }
 
 function createBoard(cells, rows) {
     if (cells) {
-        cells = ((cells) && (cells > 2)) ? ((cells < 6) ? cells : maxCellsSize) : minCellsSize;
+        cells = ((cells) && (cells > minCellsSize)) ? ((cells < maxCellsSize) ? cells : maxCellsSize) : minCellsSize;
     } else {
-        cells = 3;
+        cells = initCellsSize;
     }
     if (rows) {
-        rows = ((rows) && (rows > 2)) ? ((rows < 6) ? rows : maxRowsSize) : minRowsSize;
+        rows = ((rows) && (rows > minRowsSize)) ? ((rows < maxRowsSize) ? rows : maxRowsSize) : minRowsSize;
     } else {
-        rows = 3;
+        rows = initRowsSize;
     }
-    var boardId = 'board',
-        board = document.getElementById(boardId);
-
+    
     if (!board) {
+        boardContainer = document.createElement('div');
+        boardContainer.id = boardContainerID;
+        mainContainer.appendChild(boardContainer);
+        
         board = document.createElement('div');
         board.id = boardId;
-        mainContainer.appendChild(board);
+        boardContainer.appendChild(board);
     }
 
     board.innerHTML = '';
 
-    // Dynamic generation of the board sizes based on the number of cells
-    board.style.width = (cells * cellSize) + 60 + 'px'; // 60 is the board padding
-    board.style.height = (rows * cellSize) + 60 + 'px';
+    updateBoardAndPopupSizes(cells, rows);
 
     setTimeout(function () {
         for (var i = 1; i <= rows; i++) {
@@ -189,14 +215,12 @@ function createBoard(cells, rows) {
                 var cell = document.createElement('div');
                 cell.setAttribute('id', 'cell' + i + j);
                 cell.className = 'cell';
-                // Detects the player click -  moved in showPatternToPlayer func.
-                // cell.addEventListener('click', getUserClick.bind(this), false);
                 row.appendChild(cell);
             }
             board.appendChild(row);
         }
         assignCorrectAnswers(getLvl());
-    }, 600);
+    }, correctAnswerTimeout);
 }
 
 function createInfoBox() {
@@ -207,10 +231,9 @@ function createInfoBox() {
 
 function updateInfobox(occasion) {
     var infobox = document.getElementById('infobox');
-    infobox.innerText = MESSAGES[occasion];
-    infobox.textContent = MESSAGES[occasion];
+    infobox.innerText = occasion;
+    infobox.textContent = occasion;
 }
-
 
 function assignCorrectAnswers(level) {
 
@@ -239,29 +262,68 @@ function assignCorrectAnswers(level) {
         }
     }
 
-    answers = (answers != "") ? answers : "";
+    answers = (answers != '') ? answers : '';
     answers = assignedIndexes.toString();
 
     //show the pattern to player
-    for(var i = 0; i < selectedCells.length; i++) {
-        selectedCells[i].classList.add("openAnswer");
+    for (var i = 0; i < selectedCells.length; i++) {
+        selectedCells[i].classList.add('openAnswer');
     }
 
     //hide the pattern and assign onClick event listener     
     setTimeout(function () {
         hidePattern(selectedCells);
-    }, timeBeforeHideCells);
+    }, beforeHideCellsTimeout);
 }
 
-function hidePattern(selectedCellsPattern){
-    for(var i = 0; i < selectedCellsPattern.length; i++) {
-        selectedCellsPattern[i].classList.remove("openAnswer");
+function hidePattern(selectedCellsPattern) {
+    for (var i = 0; i < selectedCellsPattern.length; i++) {
+        selectedCellsPattern[i].classList.remove('openAnswer');
     }
 
     for (var i = 0; i < document.getElementsByClassName('cell').length; i++) {
         document.getElementsByClassName('cell')[i].addEventListener('click', getUserClick.bind(this), false);
     }
-    updateInfobox('guess');
+    updateInfobox(MESSAGES.guess);
+}
+
+function closePopup() {
+    popup.classList.remove('opened');
+    goToNextLvl();
+}
+
+function updateCurrentLvl() {
+    if (wasLevelCleared === true) {
+        currentLvl++;
+    } else if (currentLvl > 1) {
+        currentLvl--;
+    }
+}
+
+function prepAndShowInfoForNextLvl() {
+    var msg = document.getElementById('infoDialogTxt');
+    if(!popup) {
+        popup = document.createElement('div');
+        msg = document.createElement('span');
+        msg.id = 'infoDialogTxt';
+
+        popup.setAttribute('id', 'popup');
+        popup.addEventListener('click', closePopup, false);
+        boardContainer.appendChild(popup);
+        popup.appendChild(msg);
+    }
+
+    updateCurrentLvl();
+
+    var msgText = '';
+    if(wasLevelCleared) {
+        msgText += 'Points: +' + levelBonus + '<br />';
+    }
+    msgText += 'Next: ' + getLvl() + ' tiles';
+    msg.innerHTML = msgText;
+
+    popup.classList.add('opened');
+    updatePopupSize();
 }
 
 createBackground();

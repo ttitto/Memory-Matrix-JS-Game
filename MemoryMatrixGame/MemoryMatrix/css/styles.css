@@ -18,13 +18,10 @@ body {
 #main-container {
     width: 640px;
     max-width: 90%;
-    min-height: 460px;
     margin: 0 auto;
-    margin-top: 3%;
-    padding-bottom: 1%;
+    padding: 0 4%;
     border-radius: 15px;
     background-image: url('../imgs/main-bg.png');
-    box-shadow: inset -1px -1px 6px 1px rgba(102, 103, 99, 0.92);
     text-align: center;
     overflow: hidden;
     display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
@@ -34,68 +31,56 @@ body {
     display: flex; /* NEW, Spec - Opera 12.1, Firefox 20+ */
     -ms-flex-flow: column nowrap;
     flex-flow: column nowrap;
-    display: -ms-flexbox;
-    -ms-flex-pack: center;
 }
 
 #score-board {
     background: lightgray;
     border-bottom-right-radius: 40px;
     border-bottom-left-radius: 40px;
-    margin-bottom: 6%;
-    font-size: 1rem;
-    font-weight: bold;
+    margin-bottom: 50px;
 }
 
 #score-board .score-board-element {
     display: inline-block;
     margin: 0 10px;
-    padding: 10px 5px;
+    padding: 5px 5px;
     text-transform: uppercase;
     z-index:1000;
 }
 
 #score-board .score-board-value {
-    color: rgba(255, 0, 0, 0.72);
-    font-size: 1.3rem;
-    font-weight: bold;
+    color: darkred;
 }
 
 #score-board .score-board-value:before {
     content: ': ';
-    color: black;
-    font-weight: normal;
 }
 
 #infobox {
-    margin: 7% 15% 5% 15%;
-    background: rgba(255, 0, 0, 0.72);
-    color: rgb(255, 255, 255);
-    line-height: 3rem;
+    max-width: 90%;
+    margin: 20px 0;
     font-size: 0.8rem;
     -ms-word-wrap: break-word;
     word-wrap: break-word;
-
 }
 /*#endregion */
 
 /* Start Board Styles */
+#boardCont {
+    position: relative;
+}
 
 #board {
-    display: table;
     margin: auto;
     background: #c9c9c9;
-    border-radius: 30px;
-    border: 2px solid #ffeebc;
+    padding: 0 5%;
+    border-radius: 35px;
+    border: 2px solid #fff;
     position: relative;
     text-align: center;
     padding: 30px;
-    -moz-transition: all linear 0.4s;
-    -o-transition: all linear 0.4s;
-    -webkit-transition: all linear 0.4s;
     transition: all linear 0.4s;
-    display: -ms-flexbox;
-    -ms-flex-pack: center;
+    display: table;
 }
 
 .row{
@@ -103,31 +88,43 @@ body {
 }
 
 .cell{
-    width: 48px;
-    height: 48px;
-    margin: auto;
     background-color: #e3e3e3;
     border: 1px solid #a8a8a8;
     display: table-cell;
     border-collapse: collapse;
     cursor: pointer;
 }
-
-.openAnswer.cell[data-is-true=true],
+.openAnswer.cell[data-is-true=true], 
 .cell[data-is-clicked=true] {
-    background-color: rgba(255, 0, 0, 0.72);
-    border-radius: 0.2rem;
-    border-color: #ad1212;
-    border-top-color: transparent;
-    border-left-color: transparent;
-    box-shadow: inset -1px -1px 6px 1px #b01919;
-    -moz-transition: all linear 0.4s;
-    -o-transition: all linear 0.4s;
-    -webkit-transition: all linear 0.4s;
-    transition: all linear 0.4s;
+    background-color: red;
 }
 
 .cell[data-is-tru=true] {
     background-color: transparent;
 }
+
+.incorrectAnswer {
+    background-image: url(../imgs/incorrectAnswer.png);
+    background-repeat: no-repeat;
+}
+
+#popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: none;
+    margin-left: 50%;
+    border-radius: 35px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+#popup.opened {
+    display: block;
+}
+
+#infoDialogTxt {
+}
+
 /* End Board Styles */
