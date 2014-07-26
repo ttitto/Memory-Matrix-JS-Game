@@ -66,6 +66,10 @@ body {
 /*#endregion */
 
 /* Start Board Styles */
+#boardCont {
+    position: relative;
+}
+
 #board {
     margin: auto;
     background: #c9c9c9;
@@ -95,7 +99,32 @@ body {
     background-color: red;
 }
 
-cell[data-is-tru=true] {
+.cell[data-is-tru=true] {
     background-color: transparent;
 }
+
+.incorrectAnswer {
+    background-image: url(../imgs/incorrectAnswer.png);
+    background-repeat: no-repeat;
+}
+
+#popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: none;
+    margin-left: 50%;
+    border-radius: 35px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+#popup.opened {
+    display: block;
+}
+
+#infoDialogTxt {
+}
+
 /* End Board Styles */
