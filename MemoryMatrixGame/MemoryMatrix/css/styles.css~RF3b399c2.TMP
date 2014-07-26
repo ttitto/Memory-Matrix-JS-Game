@@ -1,0 +1,117 @@
+html, body, canvas, div, span, ul, li {
+    margin: 0;
+    padding: 0;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+body {
+    background-image: url('../imgs/body-bg.png');
+	background-size:cover;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 18px;
+}
+/*#region MAIN-CONTAINER */
+
+#main-container {
+    width: 640px;
+    max-width: 90%;
+    margin: 0 auto;
+    margin-top: 3%;
+    border-radius: 15px;
+    background-image: url('../imgs/main-bg.png');
+    text-align: center;
+    overflow: hidden;
+    display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox; /* TWEENER - IE 10 */
+    display: -webkit-flex; /* NEW - Chrome */
+    display: flex; /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    -ms-flex-flow: column nowrap;
+    flex-flow: column nowrap;
+}
+
+#score-board {
+    background: lightgray;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    margin-bottom: 50px;
+}
+
+#score-board::before {
+position: absolute;
+margin: 0 auto;
+width: 41.2%;
+top: 70px;
+left: 397px;
+content: "";
+border: 1px solid transparent;
+box-shadow: 5px 5px 6px 0 rgba(255, 134, 44, 0.5);
+}
+
+#score-board .score-board-element {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 5px 5px;
+    text-transform: uppercase;
+    z-index:1000;
+}
+
+#score-board .score-board-value {
+    color: darkred;
+}
+
+#score-board .score-board-value:before {
+    content: ': ';
+}
+
+#infobox {
+    max-width: 90%;
+    margin: 20px auto;
+    font-size: 0.8rem;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}
+/*#endregion */
+
+/* Start Board Styles */
+
+#board {
+    display: table;
+    margin: auto;
+    background: #c9c9c9;
+    border-radius: 30px;
+    border: 2px solid #ffeebc;
+    border-spacing: 1px;
+    position: relative;
+    text-align: center;
+    padding: 30px;
+    -moz-transition: all linear 0.4s;
+    -o-transition: all linear 0.4s;
+    -webkit-transition: all linear 0.4s;
+    transition: all linear 0.4s;
+}
+
+.row{
+    display: table-row;
+}
+
+.cell{
+    background-color: #e3e3e3;
+    border: 1px solid #a8a8a8;
+    display: table-cell;
+    border-collapse: collapse;
+    cursor: pointer;
+}
+.openAnswer.cell[data-is-true=true],
+.cell[data-is-clicked=true] {
+        background-color: red;
+        box-shadow: inset -1px -1px 10px 2px #b01919;
+    }
+
+.cell[data-is-tru=true] {
+    background-color: transparent;
+}
+/* End Board Styles */
