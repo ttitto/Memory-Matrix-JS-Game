@@ -75,6 +75,7 @@ function createScoreBoard() {
 
         var sp = document.createElement('span');
         sp.className = 'score-board-value';
+        sp.id = categories[i].content;
         sp.innerText = categories[i].val;
         sp.textContent = categories[i].val;
         li.appendChild(sp);
@@ -84,14 +85,24 @@ function createScoreBoard() {
 function addPoints(tilePts, levelPts) {
     //increases the score by given amount of points passed as parameters
     levelPts = levelPts || 0;
-    var scoreSpan = document.getElementsByClassName('score-board-value')[2];
+    var scoreSpan = document.getElementById('Score');
 
     var score = scoreSpan.innerText || scoreSpan.textContent;
     score = parseInt(score) + parseInt(tilePts) + parseInt(levelPts);
     scoreSpan.innerText = score;
     scoreSpan.textContent = score;
 }
-
+function updateLevelBonus(direction) {
+    switch (direction) {
+        case 'down':
+            if (levelBonus <= 5) { break; }
+            else { levelBonus /= 2; }
+            break;
+        case 'up':
+            levelBonus *= 2;
+            break;
+    }
+}
 function getUserClick(event) {
     // This function handles the player click
     var element = event.target;
@@ -112,7 +123,7 @@ function getUserClick(event) {
             addPoints(pointsForCorrectAnswer, levelBonus);
             element.setAttribute('data-is-true', 'false');
             prepAndShowInfoForNextLvl();
-            levelBonus *= 2;
+            updateLevelBonus('up');
         }
     } else {
         element.classList.add('incorrectAnswer');
@@ -126,13 +137,13 @@ function getUserClick(event) {
 }
 
 function goToNextLvl() {
-    if (trials) {
+    if(trials) {
         //update trials in scoreboard
         trials--;
-        document.getElementsByClassName('score-board-value')[1].innerHTML = trials;
+        document.getElementById('Trials').innerHTML = trials;
 
         //update Tiles in scoreboard
-        document.getElementsByClassName('score-board-value')[0].innerHTML = getLvl();
+        document.getElementById('Tiles').innerHTML = getLvl();
 
         //clear counter
         tilesCounter = 1;
@@ -281,6 +292,14 @@ function closePopup() {
     goToNextLvl();
 }
 
+function updateCurrentLvl() {
+    if (wasLevelCleared === true) {
+        currentLvl++;
+    } else if (currentLvl > 1) {
+        currentLvl--;
+    }
+}
+
 function prepAndShowInfoForNextLvl() {
     var msg = document.getElementById('infoDialogTxt');
     if(!popup) {
@@ -294,7 +313,7 @@ function prepAndShowInfoForNextLvl() {
         popup.appendChild(msg);
     }
 
-    (wasLevelCleared === true) ? currentLvl++ : currentLvl--;
+    updateCurrentLvl();
 
     var msgText = '';
     if(wasLevelCleared) {
