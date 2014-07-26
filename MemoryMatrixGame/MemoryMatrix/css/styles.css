@@ -82,7 +82,6 @@ body {
 /* Start Board Styles */
 
 #board {
-    display: table;
     margin: auto;
     background: #c9c9c9;
     border-radius: 30px;
@@ -94,6 +93,7 @@ body {
     -o-transition: all linear 0.4s;
     -webkit-transition: all linear 0.4s;
     transition: all linear 0.4s;
+    display: table;
     display: -ms-flexbox;
     -ms-flex-pack: center;
 }
