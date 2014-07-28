@@ -130,6 +130,7 @@ function getUserClick(event) {
             } else if (tilesCounter === currLevel) {
                 element.setAttribute('data-is-clicked', 'true');
                 wasLevelCleared = true;
+                updateLevelBonus('up');
                 addPoints(pointsForCorrectAnswer, levelBonus);
                 element.setAttribute('data-is-true', 'false');
 
@@ -137,8 +138,6 @@ function getUserClick(event) {
                     updateInfobox(MESSAGES.levelSuccess);
                     prepAndShowInfoForNextLvl();
                 }, infoboxTimeout);
-
-                updateLevelBonus('up');
             }
         } else if (isClicked) {
             return;
