@@ -88,10 +88,12 @@ body {
 /* Start Board Styles */
 #boardCont {
     position: relative;
+    margin: 2rem 0;
 }
 
-#board,.gameOver {
-    margin: 6% auto 4% auto;
+#board,
+.gameOver {
+    margin: 0 auto;
     background: #c9c9c9;
     border-radius: 30px;
     border: 2px solid #ffeebc;
@@ -132,7 +134,7 @@ body {
     -moz-transition: all linear 0.4s;
     -o-transition: all linear 0.4s;
     -webkit-transition: all linear 0.4s;
-    transition: all linear 0.4s;
+    transition: all linear 0.2s;
 }
 
 .cell[data-is-tru=true] {
@@ -150,7 +152,7 @@ body {
 
 #popup {
     position: absolute;
-    top: 14%;
+    top: 0;
     left: 0;
     background-color: rgba(255, 255, 255, 0.6);
     display: none;
@@ -161,7 +163,9 @@ body {
 }
 
 #popup.opened {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .hide{
@@ -183,5 +187,16 @@ body {
 .gameOver{
     width:70%;
     height: 70%;
+    top: 7rem;
+}
+
+.green {
+    color: forestgreen;
+    font-weight: bold;
+}
+
+.red {
+    color: darkred;
+    font-weight: bold;
 }
 /* End Board Styles */

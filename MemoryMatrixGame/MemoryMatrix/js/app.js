@@ -11,6 +11,7 @@ var mainContainer,
     cellSize = 50,
     pointsForCorrectAnswer = 10,
     wasLevelCleared = true,
+    playerCanClick = true,
     minRowsSize = 2,
     minCellsSize = 2,
     initCellsSize = 3,
@@ -21,10 +22,13 @@ var mainContainer,
     answers = '',
     trials = 2, //how many trials user has
     score = 0, //user score
-    beforeHideCellsTimeout = 2000,
-    correctAnswerTimeout = 600,
+    beforeHideCellsTimeout = 1500,
+    correctAnswerTimeout = 500,
+    infoboxTimeout = 300,
+    betweenLevelsTimeout = 2000,
     board = null,
     popup = null,
+    canClickOnInfoBox = true, // if "false" the next level will start automatically
     storage = window.localStorage;//holds the browsers local storage
 
 var boardDimArray = [[2, 2], [2, 2], [3, 3], [4, 3], [4, 4], [5, 4], [5, 5], [6, 5], [6, 6]];
@@ -108,42 +112,51 @@ function updateLevelBonus(direction) {
     }
 }
 function getUserClick(event) {
-    // This function handles the player click
-    var element = event.target;
-    // var selectedCellID = element.getAttribute('id');
-    var isClicked = (element.getAttribute('data-is-clicked')) ? true : false;
-    if (element.getAttribute('data-is-true') && !isClicked) {
-        var currLevel = getLvl();
-        if (tilesCounter < currLevel) {
-            element.setAttribute('data-is-clicked', 'true');
-            tilesCounter++;
-            addPoints(pointsForCorrectAnswer);
-            element.setAttribute('data-is-true', 'false');
+    if(playerCanClick === true) {
 
-        } else if (tilesCounter === currLevel) {
-            element.setAttribute('data-is-clicked', 'true');
-            updateInfobox(MESSAGES.levelSuccess);
-            wasLevelCleared = true;
-            addPoints(pointsForCorrectAnswer, levelBonus);
-            element.setAttribute('data-is-true', 'false');
-            prepAndShowInfoForNextLvl();
-            updateLevelBonus('up');
-        }
-    } else if (isClicked) {
-        return;
-    } else {
-        element.classList.add('incorrectAnswer');
-        updateLevelBonus('down');
-        setTimeout(function () {
-            updateInfobox(MESSAGES.levelLost);
+
+        // This function handles the player click
+        var element = event.target;
+        // var selectedCellID = element.getAttribute('id');
+        var isClicked = (element.getAttribute('data-is-clicked')) ? true : false;
+        if (element.getAttribute('data-is-true') && !isClicked) {
+            var currLevel = getLvl();
+            if (tilesCounter < currLevel) {
+                element.setAttribute('data-is-clicked', 'true');
+                tilesCounter++;
+                addPoints(pointsForCorrectAnswer);
+                element.setAttribute('data-is-true', 'false');
+
+            } else if (tilesCounter === currLevel) {
+                element.setAttribute('data-is-clicked', 'true');
+                wasLevelCleared = true;
+                addPoints(pointsForCorrectAnswer, levelBonus);
+                element.setAttribute('data-is-true', 'false');
+
+                setTimeout(function () {
+                    updateInfobox(MESSAGES.levelSuccess);
+                    prepAndShowInfoForNextLvl();
+                }, infoboxTimeout);
+
+                updateLevelBonus('up');
+            }
+        } else if (isClicked) {
+            return;
+        } else {
+            element.classList.add('incorrectAnswer');
+            updateLevelBonus('down');
+            playerCanClick = false;
             wasLevelCleared = false;
-            prepAndShowInfoForNextLvl();
-        }, 500);
+            setTimeout(function () {
+                updateInfobox(MESSAGES.levelLost);
+                prepAndShowInfoForNextLvl();
+            }, infoboxTimeout);
+        }
     }
-
 }
 
 function goToNextLvl() {
+    playerCanClick = true;
     if (trials) {
         //update trials in scoreboard
         trials--;
@@ -311,11 +324,13 @@ function prepAndShowInfoForNextLvl() {
     var msg = document.getElementById('infoDialogTxt');
     if (!popup) {
         popup = document.createElement('div');
-        msg = document.createElement('span');
+        msg = document.createElement('p');
         msg.id = 'infoDialogTxt';
 
         popup.setAttribute('id', 'popup');
-        popup.addEventListener('click', closePopup, false);
+        if (canClickOnInfoBox === true) {
+            popup.addEventListener('click', closePopup, false);
+        }
         boardContainer.appendChild(popup);
         popup.appendChild(msg);
     }
@@ -324,13 +339,19 @@ function prepAndShowInfoForNextLvl() {
 
     var msgText = '';
     if (wasLevelCleared) {
-        msgText += 'Bonus Points: +' + levelBonus + '<br />';
+        msgText += 'Bonus Points: <span class="green">+' + levelBonus + '</span><br />';
     }
-    msgText += 'Next: ' + getLvl() + ' tiles';
+    msgText += 'Next: <span class="red">' + getLvl() + '</span> tiles';
     msg.innerHTML = msgText;
 
     popup.classList.add('opened');
     updatePopupSize();
+
+    if (canClickOnInfoBox !== true) {
+        setTimeout(function () {
+            closePopup();
+        }, betweenLevelsTimeout);
+    }
 }
 
 function storeMaxScore(currentScore) {
