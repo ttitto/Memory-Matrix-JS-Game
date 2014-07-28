@@ -19,7 +19,7 @@ var mainContainer,
     maxCellsSize = 6,
     boardPadding = 60,
     answers = '',
-    trials = 1, //how many trials user has
+    trials = 15, //how many trials user has
     score = 0, //user score
     beforeHideCellsTimeout = 2000,
     correctAnswerTimeout = 600,
@@ -87,7 +87,7 @@ function addPoints(tilePts, levelPts) {
     //increases the score by given amount of points passed as parameters
     levelPts = levelPts || 0;
     var scoreSpan = document.getElementById('Score');     
-    var score = scoreSpan.innerText || scoreSpan.textContent;
+    score = scoreSpan.innerText || scoreSpan.textContent;
     score = parseInt(score) + parseInt(tilePts) + parseInt(levelPts);
     scoreSpan.innerText = score;
     scoreSpan.textContent = score;
