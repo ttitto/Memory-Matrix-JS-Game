@@ -19,12 +19,13 @@ var mainContainer,
     maxCellsSize = 6,
     boardPadding = 60,
     answers = '',
-    trials = 15, //how many trials user has
+    trials = 2, //how many trials user has
     score = 0, //user score
     beforeHideCellsTimeout = 2000,
     correctAnswerTimeout = 600,
     board = null,
-    popup = null;
+    popup = null,
+    storage = window.localStorage;//holds the browsers local storage
 
 var boardDimArray = [[2, 2], [2, 2], [3, 3], [4, 3], [4, 4], [5, 4], [5, 5], [6, 5], [6, 6]];
 
@@ -34,7 +35,9 @@ var MESSAGES = {
     levelSuccess: 'Congratulations! You won another level.\nTry with more tiles!',
     guess: 'Guess the next tile!',
     gameOver: 'GAME OVER!',
-    scoreMessage: 'Your score is: '
+    scoreMessage: 'Your score is: ',
+    payAttention: 'Remember the tiles positions!',
+    bestResult: 'Your result will be stored as BEST RESULT.\nCongratulations!'
 };
 
 
@@ -86,7 +89,7 @@ function createScoreBoard() {
 function addPoints(tilePts, levelPts) {
     //increases the score by given amount of points passed as parameters
     levelPts = levelPts || 0;
-    var scoreSpan = document.getElementById('Score');     
+    var scoreSpan = document.getElementById('Score');
     score = scoreSpan.innerText || scoreSpan.textContent;
     score = parseInt(score) + parseInt(tilePts) + parseInt(levelPts);
     scoreSpan.innerText = score;
@@ -95,9 +98,9 @@ function addPoints(tilePts, levelPts) {
 function updateLevelBonus(direction) {
     switch (direction) {
         case 'down':
-            if (levelBonus <= 5) {
-                break;
-            } else { levelBonus /= 2; }
+            if (levelBonus > 5) {
+                levelBonus /= 2;
+            }
             break;
         case 'up':
             levelBonus *= 2;
@@ -130,6 +133,7 @@ function getUserClick(event) {
         return;
     } else {
         element.classList.add('incorrectAnswer');
+        updateLevelBonus('down');
         setTimeout(function () {
             updateInfobox(MESSAGES.levelLost);
             wasLevelCleared = false;
@@ -157,6 +161,7 @@ function goToNextLvl() {
 
         // Invokes "createBoard(cells, rows)" by giving in the correct number of cells and rows
         createBoard(boardDimArray[board][0], boardDimArray[board][1]);
+        updateInfobox(MESSAGES.payAttention);
     } else {
         //GAME OVER - no more trials. Function for displaying GAME OVER Screen here        
         endGame();
@@ -328,8 +333,23 @@ function prepAndShowInfoForNextLvl() {
     updatePopupSize();
 }
 
-function endGame(){
-    $('#main-container').html("").append("<div class='gameOver'><h2>"+MESSAGES.gameOver+"</h2>\n<p>"+MESSAGES.scoreMessage+score+"</p>\n<a href=\"javascript:window.location = window.location;\">New game?</a></div>");
+function storeMaxScore(currentScore) {
+    alert(typeof( storage));
+    if (typeof (storage) !== 'undefined') {
+        if (parseInt(storage.maxScore) < currentScore) {
+            storage.setItem('maxScore', currentScore);
+            return true;
+        }
+    }
+    return false;
+}
+
+function endGame() {
+    if (storeMaxScore(score)) {
+        $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n<a href=\"javascript:window.location = window.location;\">New game?</a></div>");
+    } else {
+        $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n" + MESSAGES.bestResult + "\n<a href=\"javascript:window.location = window.location;\">New game?</a></div>");
+    }
 }
 
 createBackground();
