@@ -86,9 +86,8 @@ function createScoreBoard() {
 function addPoints(tilePts, levelPts) {
     //increases the score by given amount of points passed as parameters
     levelPts = levelPts || 0;
-    var scoreSpan = document.getElementById('Score');
-
-    score = scoreSpan.innerText || scoreSpan.textContent;
+    var scoreSpan = document.getElementById('Score');     
+    var score = scoreSpan.innerText || scoreSpan.textContent;
     score = parseInt(score) + parseInt(tilePts) + parseInt(levelPts);
     scoreSpan.innerText = score;
     scoreSpan.textContent = score;
