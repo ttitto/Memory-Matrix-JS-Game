@@ -1,6 +1,6 @@
-C:\Me\tortGit-JavaScript-GameProject\MemoryMatrixGame\MemoryMatrix\bin\MemoryMatrix.dll.config
-C:\Me\tortGit-JavaScript-GameProject\MemoryMatrixGame\MemoryMatrix\bin\MemoryMatrix.dll
-C:\Me\tortGit-JavaScript-GameProject\MemoryMatrixGame\MemoryMatrix\bin\MemoryMatrix.pdb
-C:\Me\tortGit-JavaScript-GameProject\MemoryMatrixGame\MemoryMatrix\obj\Debug\MemoryMatrix.csprojResolveAssemblyReference.cache
-C:\Me\tortGit-JavaScript-GameProject\MemoryMatrixGame\MemoryMatrix\obj\Debug\MemoryMatrix.dll
-C:\Me\tortGit-JavaScript-GameProject\MemoryMatrixGame\MemoryMatrix\obj\Debug\MemoryMatrix.pdb
+C:\Users\Ventsislav\Desktop\MemoryMatrix\trunk\MemoryMatrixGame\MemoryMatrix\bin\MemoryMatrix.dll.config
+C:\Users\Ventsislav\Desktop\MemoryMatrix\trunk\MemoryMatrixGame\MemoryMatrix\bin\MemoryMatrix.dll
+C:\Users\Ventsislav\Desktop\MemoryMatrix\trunk\MemoryMatrixGame\MemoryMatrix\bin\MemoryMatrix.pdb
+C:\Users\Ventsislav\Desktop\MemoryMatrix\trunk\MemoryMatrixGame\MemoryMatrix\obj\Debug\MemoryMatrix.csprojResolveAssemblyReference.cache
+C:\Users\Ventsislav\Desktop\MemoryMatrix\trunk\MemoryMatrixGame\MemoryMatrix\obj\Debug\MemoryMatrix.dll
+C:\Users\Ventsislav\Desktop\MemoryMatrix\trunk\MemoryMatrixGame\MemoryMatrix\obj\Debug\MemoryMatrix.pdb

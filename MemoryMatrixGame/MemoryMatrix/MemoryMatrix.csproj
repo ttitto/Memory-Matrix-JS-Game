@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="imgs\win-medal.png" />
+    <Content Include="imgs\yellow-star-icon.png" />
     <Content Include="js-webshim\dev\shims\combos\comboinfo.json" />
     <Content Include="js-webshim\dev\shims\FlashCanvasPro\proxy.php" />
     <Content Include="js-webshim\dev\shims\FlashCanvasPro\save.php" />

@@ -53,6 +53,14 @@ body {
     z-index:1000;
 }
 
+    #score-board .score-board-element:last-child::before {
+        content: "\00a0\00a0\00a0\00a0\00a0\00a0";
+        background-image: url(../imgs/yellow-star-icon.png);
+        background-size: 27px 27px;
+        background-repeat: no-repeat;
+        background-position: 1px -5px;
+    }
+
 #score-board .score-board-value {
     color: rgba(255, 0, 0, 0.72);
     font-size: 1.3rem;
