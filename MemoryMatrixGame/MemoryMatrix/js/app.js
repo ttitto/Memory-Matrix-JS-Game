@@ -20,7 +20,7 @@ var mainContainer,
     maxCellsSize = 6,
     boardPadding = 60,
     answers = '',
-    trials = 2, //how many trials user has
+    trials = 15, //how many trials user has
     score = 0, //user score
     beforeHideCellsTimeout = 1500,
     correctAnswerTimeout = 500,
@@ -355,9 +355,13 @@ function prepAndShowInfoForNextLvl() {
 }
 
 function storeMaxScore(currentScore) {
-    alert(typeof( storage));
     if (typeof (storage) !== 'undefined') {
-        if (parseInt(storage.maxScore) < currentScore) {
+        if (typeof (storage.maxScore) !== 'undefined') {
+            if (parseInt(storage.maxScore) < currentScore) {
+                storage.setItem('maxScore', currentScore);
+                return true;
+            }
+        } else {
             storage.setItem('maxScore', currentScore);
             return true;
         }
@@ -366,10 +370,10 @@ function storeMaxScore(currentScore) {
 }
 
 function endGame() {
-    if (storeMaxScore(score)) {
+    if (!storeMaxScore(score)) {
         $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n<a href=\"javascript:window.location = window.location;\">New game?</a></div>");
     } else {
-        $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n" + MESSAGES.bestResult + "\n<a href=\"javascript:window.location = window.location;\">New game?</a></div>");
+        $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n" + MESSAGES.bestResult + "</br><a href=\"javascript:window.location = window.location;\">New game?</a></div>");
     }
 }
 
