@@ -19,7 +19,7 @@ var mainContainer,
     maxCellsSize = 6,
     boardPadding = 60,
     answers = '',
-    trials = 15, //how many trials user has
+    trials = 1, //how many trials user has
     score = 0, //user score
     beforeHideCellsTimeout = 2000,
     correctAnswerTimeout = 600,
@@ -33,7 +33,8 @@ var MESSAGES = {
     tileSucess: 'You hit it right! Guess the next tile!',
     levelSuccess: 'Congratulations! You won another level.\nTry with more tiles!',
     guess: 'Guess the next tile!',
-    gameOver: 'GAME OVER!\n Your score is: '
+    gameOver: 'GAME OVER!',
+    scoreMessage: 'Your score is: '
 };
 
 
@@ -87,7 +88,7 @@ function addPoints(tilePts, levelPts) {
     levelPts = levelPts || 0;
     var scoreSpan = document.getElementById('Score');
 
-    var score = scoreSpan.innerText || scoreSpan.textContent;
+    score = scoreSpan.innerText || scoreSpan.textContent;
     score = parseInt(score) + parseInt(tilePts) + parseInt(levelPts);
     scoreSpan.innerText = score;
     scoreSpan.textContent = score;
@@ -158,8 +159,8 @@ function goToNextLvl() {
         // Invokes "createBoard(cells, rows)" by giving in the correct number of cells and rows
         createBoard(boardDimArray[board][0], boardDimArray[board][1]);
     } else {
-        //GAME OVER - no more trials. Function for displaying GAME OVER Screen here
-        alert(MESSAGES.gameOver + score + '!');
+        //GAME OVER - no more trials. Function for displaying GAME OVER Screen here        
+        endGame();
     }
 }
 
@@ -326,6 +327,10 @@ function prepAndShowInfoForNextLvl() {
 
     popup.classList.add('opened');
     updatePopupSize();
+}
+
+function endGame(){
+    $('#main-container').html("").append("<div class='gameOver'><h2>"+MESSAGES.gameOver+"</h2>\n<p>"+MESSAGES.scoreMessage+score+"</p>\n<a href=\"javascript:window.location = window.location;\">New game?</a></div>");
 }
 
 createBackground();

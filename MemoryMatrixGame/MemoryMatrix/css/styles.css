@@ -84,7 +84,7 @@ body {
     position: relative;
 }
 
-#board {
+#board,.gameOver {
     margin: auto;
     background: #c9c9c9;
     border-radius: 30px;
@@ -112,8 +112,7 @@ body {
     background-color: #e3e3e3;
     border: 1px solid #a8a8a8;
     display: table-cell;
-    border-collapse: collapse;
-    cursor: pointer;
+    border-collapse: collapse;    
 }
 
 .openAnswer.cell[data-is-true=true],
@@ -133,7 +132,9 @@ body {
 .cell[data-is-tru=true] {
     background-color: transparent;
 }
-
+.setPointer{
+    cursor: pointer;
+}
 .incorrectAnswer {
     background-image: url(../imgs/incorrectAnswer.png);
     background-repeat: no-repeat;
@@ -154,8 +155,14 @@ body {
 #popup.opened {
     display: block;
 }
+.hide{
+    display: none !important;
+}
 
 #infoDialogTxt {
 }
-
+.gameOver{
+    width:70%;
+    height: 70%;
+}
 /* End Board Styles */
