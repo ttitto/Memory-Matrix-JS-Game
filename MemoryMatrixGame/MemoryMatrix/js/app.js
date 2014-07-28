@@ -87,7 +87,7 @@ function addPoints(tilePts, levelPts) {
     levelPts = levelPts || 0;
     var scoreSpan = document.getElementById('Score');
 
-    var score = scoreSpan.innerText || scoreSpan.textContent;
+     score = scoreSpan.innerText || scoreSpan.textContent;
     score = parseInt(score) + parseInt(tilePts) + parseInt(levelPts);
     scoreSpan.innerText = score;
     scoreSpan.textContent = score;
