@@ -107,9 +107,9 @@ function getUserClick(event) {
     // This function handles the player click
     var element = event.target;
     var selectedCellID = element.getAttribute('id');
-    if (element.getAttribute('data-is-true') && !element.getAttribute('data-is-ckicked')) {
+    var isClicked = (element.getAttribute('data-is-clicked'))? true : false;
+    if (element.getAttribute('data-is-true') && !isClicked) {
         var currLevel = getLvl();
-
         if (tilesCounter < currLevel) {
             element.setAttribute('data-is-clicked', 'true');
             tilesCounter++;
@@ -125,15 +125,17 @@ function getUserClick(event) {
             prepAndShowInfoForNextLvl();
             updateLevelBonus('up');
         }
-    } else {
+    } else if(isClicked) {
+        return;
+    }else{
         element.classList.add('incorrectAnswer');
         setTimeout(function(){
             updateInfobox(MESSAGES.levelLost);
             wasLevelCleared = false;
-
             prepAndShowInfoForNextLvl();
         }, 500);
     }
+
 }
 
 function goToNextLvl() {
@@ -255,7 +257,6 @@ function assignCorrectAnswers(level) {
                 var cellElement = cellsArray[randomCellIndex];
                 selectedCells.push(cellElement);
                 cellElement.setAttribute('data-is-true', 'true');
-
                 assignedIndexes.push(randomCellIndex);
                 canContinue = false;
             }
