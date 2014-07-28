@@ -3,26 +3,26 @@
 var mainContainer,
     boardContainer,
     board,
-    boardId         = 'board',
-    boardContainerID= 'boardCont',
-    currentLvl      = 3, // 3 is the starting level
-    tilesCounter    = 1, //Counter to hold the revealed answers
-    levelBonus      = 5, //holds the points that will be added if the level succeeds
-    cellSize        = 50,
-    pointsForCorrectAnswer  = 10,
-    wasLevelCleared         = true,
-    minRowsSize     = 2,
-    minCellsSize    = 2,
-    initCellsSize   = 3,
-    initRowsSize    = 3,
-    maxRowsSize     = 6,
-    maxCellsSize    = 6,
-    boardPadding    = 60,
-    answers         = '',
-    trials          = 15, //how many trials user has
-    score           = 0, //user score
-    beforeHideCellsTimeout  = 2000,
-    correctAnswerTimeout    = 600,
+    boardId = 'board',
+    boardContainerID = 'boardCont',
+    currentLvl = 3, // 3 is the starting level
+    tilesCounter = 1, //Counter to hold the revealed answers
+    levelBonus = 5, //holds the points that will be added if the level succeeds
+    cellSize = 50,
+    pointsForCorrectAnswer = 10,
+    wasLevelCleared = true,
+    minRowsSize = 2,
+    minCellsSize = 2,
+    initCellsSize = 3,
+    initRowsSize = 3,
+    maxRowsSize = 6,
+    maxCellsSize = 6,
+    boardPadding = 60,
+    answers = '',
+    trials = 15, //how many trials user has
+    score = 0, //user score
+    beforeHideCellsTimeout = 2000,
+    correctAnswerTimeout = 600,
     board = null,
     popup = null;
 
@@ -33,15 +33,16 @@ var MESSAGES = {
     tileSucess: 'You hit it right! Guess the next tile!',
     levelSuccess: 'Congratulations! You won another level.\nTry with more tiles!',
     guess: 'Guess the next tile!',
-    gameOver: 'GAME OVER!\n Your score is: '
-}
+    gameOver: 'GAME OVER!',
+    scoreMessage: 'Your score is: '
+};
 
 
 var ScoreBoardElement = function (imgURL, content, val) {
     this.imgURL = imgURL;
     this.content = content;
     this.val = val;
-}
+};
 
 function getLvl() {
     return currentLvl;
@@ -85,9 +86,8 @@ function createScoreBoard() {
 function addPoints(tilePts, levelPts) {
     //increases the score by given amount of points passed as parameters
     levelPts = levelPts || 0;
-    var scoreSpan = document.getElementById('Score');
-
-    var score = scoreSpan.innerText || scoreSpan.textContent;
+    var scoreSpan = document.getElementById('Score');     
+    score = scoreSpan.innerText || scoreSpan.textContent;
     score = parseInt(score) + parseInt(tilePts) + parseInt(levelPts);
     scoreSpan.innerText = score;
     scoreSpan.textContent = score;
@@ -95,8 +95,9 @@ function addPoints(tilePts, levelPts) {
 function updateLevelBonus(direction) {
     switch (direction) {
         case 'down':
-            if (levelBonus <= 5) { break; }
-            else { levelBonus /= 2; }
+            if (levelBonus <= 5) {
+                break;
+            } else { levelBonus /= 2; }
             break;
         case 'up':
             levelBonus *= 2;
@@ -106,8 +107,8 @@ function updateLevelBonus(direction) {
 function getUserClick(event) {
     // This function handles the player click
     var element = event.target;
-    var selectedCellID = element.getAttribute('id');
-    var isClicked = (element.getAttribute('data-is-clicked'))? true : false;
+    // var selectedCellID = element.getAttribute('id');
+    var isClicked = (element.getAttribute('data-is-clicked')) ? true : false;
     if (element.getAttribute('data-is-true') && !isClicked) {
         var currLevel = getLvl();
         if (tilesCounter < currLevel) {
@@ -116,7 +117,7 @@ function getUserClick(event) {
             addPoints(pointsForCorrectAnswer);
             element.setAttribute('data-is-true', 'false');
 
-        } else if (tilesCounter == currLevel) {
+        } else if (tilesCounter === currLevel) {
             element.setAttribute('data-is-clicked', 'true');
             updateInfobox(MESSAGES.levelSuccess);
             wasLevelCleared = true;
@@ -125,11 +126,11 @@ function getUserClick(event) {
             prepAndShowInfoForNextLvl();
             updateLevelBonus('up');
         }
-    } else if(isClicked) {
+    } else if (isClicked) {
         return;
-    }else{
+    } else {
         element.classList.add('incorrectAnswer');
-        setTimeout(function(){
+        setTimeout(function () {
             updateInfobox(MESSAGES.levelLost);
             wasLevelCleared = false;
             prepAndShowInfoForNextLvl();
@@ -139,7 +140,7 @@ function getUserClick(event) {
 }
 
 function goToNextLvl() {
-    if(trials) {
+    if (trials) {
         //update trials in scoreboard
         trials--;
         document.getElementById('Trials').innerHTML = trials;
@@ -157,26 +158,26 @@ function goToNextLvl() {
         // Invokes "createBoard(cells, rows)" by giving in the correct number of cells and rows
         createBoard(boardDimArray[board][0], boardDimArray[board][1]);
     } else {
-        //GAME OVER - no more trials. Function for displaying GAME OVER Screen here
-        alert(MESSAGES.gameOver + score + '!');
+        //GAME OVER - no more trials. Function for displaying GAME OVER Screen here        
+        endGame();
     }
 }
 
 function updatePopupSize(width, height) {
-    if(popup)  {
+    if (popup) {
         width = width || board.offsetWidth;
         height = height || board.offsetHeight;
 
         popup.style.width = width + 'px';
         popup.style.height = height + 'px';
-        popup.style.left = -(width/2) + 'px';
+        popup.style.left = -(width / 2) + 'px';
     }
 }
 
 function updateBoardAndPopupSizes(cells, rows) {
     var width = (cells * cellSize) + boardPadding;
     var height = (rows * cellSize) + boardPadding;
-    board.style.width = width  + 'px';
+    board.style.width = width + 'px';
     board.style.height = height + 'px';
 
     updatePopupSize(width, height);
@@ -193,12 +194,12 @@ function createBoard(cells, rows) {
     } else {
         rows = initRowsSize;
     }
-    
+
     if (!board) {
         boardContainer = document.createElement('div');
         boardContainer.id = boardContainerID;
         mainContainer.appendChild(boardContainer);
-        
+
         board = document.createElement('div');
         board.id = boardId;
         boardContainer.appendChild(board);
@@ -245,15 +246,15 @@ function assignCorrectAnswers(level) {
         canContinue = true;
 
     var getRandomNumber = function () {
-        return Math.floor(Math.random() * cellsArray.length)
-    }
+        return Math.floor(Math.random() * cellsArray.length);
+    };
 
     for (var i = 0; i < level; i++) {
         canContinue = true;
 
         while (canContinue) {
             var randomCellIndex = getRandomNumber();
-            if (assignedIndexes.indexOf(randomCellIndex) == -1) {
+            if (assignedIndexes.indexOf(randomCellIndex) === -1) {
                 var cellElement = cellsArray[randomCellIndex];
                 selectedCells.push(cellElement);
                 cellElement.setAttribute('data-is-true', 'true');
@@ -263,12 +264,12 @@ function assignCorrectAnswers(level) {
         }
     }
 
-    answers = (answers != '') ? answers : '';
+    answers = (answers !== '') ? answers : '';
     answers = assignedIndexes.toString();
 
     //show the pattern to player
-    for (var i = 0; i < selectedCells.length; i++) {
-        selectedCells[i].classList.add('openAnswer');
+    for (var j = 0; j < selectedCells.length; j++) {
+        selectedCells[j].classList.add('openAnswer');
     }
 
     //hide the pattern and assign onClick event listener     
@@ -278,8 +279,8 @@ function assignCorrectAnswers(level) {
 }
 
 function hidePattern(selectedCellsPattern) {
-    for (var i = 0; i < selectedCellsPattern.length; i++) {
-        selectedCellsPattern[i].classList.remove('openAnswer');
+    for (var k = 0; k < selectedCellsPattern.length; k++) {
+        selectedCellsPattern[k].classList.remove('openAnswer');
     }
 
     for (var i = 0; i < document.getElementsByClassName('cell').length; i++) {
@@ -303,7 +304,7 @@ function updateCurrentLvl() {
 
 function prepAndShowInfoForNextLvl() {
     var msg = document.getElementById('infoDialogTxt');
-    if(!popup) {
+    if (!popup) {
         popup = document.createElement('div');
         msg = document.createElement('span');
         msg.id = 'infoDialogTxt';
@@ -317,14 +318,18 @@ function prepAndShowInfoForNextLvl() {
     updateCurrentLvl();
 
     var msgText = '';
-    if(wasLevelCleared) {
-        msgText += 'Points: +' + levelBonus + '<br />';
+    if (wasLevelCleared) {
+        msgText += 'Bonus Points: +' + levelBonus + '<br />';
     }
     msgText += 'Next: ' + getLvl() + ' tiles';
     msg.innerHTML = msgText;
 
     popup.classList.add('opened');
     updatePopupSize();
+}
+
+function endGame(){
+    $('#main-container').html("").append("<div class='gameOver'><h2>"+MESSAGES.gameOver+"</h2>\n<p>"+MESSAGES.scoreMessage+score+"</p>\n<a href=\"javascript:window.location = window.location;\">New game?</a></div>");
 }
 
 createBackground();
