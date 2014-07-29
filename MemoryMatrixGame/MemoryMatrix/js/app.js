@@ -102,6 +102,10 @@ function addPoints(tilePts, levelPts) {
     function blinkingScore() {
         var scoreBySpan = document.getElementById("Score");
         scoreBySpan.classList.add("blinkingScore");
+        
+        setTimeout(function () {
+            $('#Score').removeClass('blinkingScore');
+        }, 500);
     }
 
     blinkingScore();
