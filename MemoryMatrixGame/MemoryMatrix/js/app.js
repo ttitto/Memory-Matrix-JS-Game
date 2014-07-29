@@ -98,7 +98,15 @@ function addPoints(tilePts, levelPts) {
     score = parseInt(score) + parseInt(tilePts) + parseInt(levelPts);
     scoreSpan.innerText = score;
     scoreSpan.textContent = score;
+
+    function blinkingScore() {
+        var scoreBySpan = document.getElementById("Score");
+        scoreBySpan.classList.add("blinkingScore");
+    }
+
+    blinkingScore();
 }
+
 function updateLevelBonus(direction) {
     switch (direction) {
         case 'down':
