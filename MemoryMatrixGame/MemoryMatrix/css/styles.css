@@ -6,7 +6,6 @@ html, body, canvas, div, span, ul, li {
     box-sizing: border-box;
 }
 
-
 body {
     background-image: url('../imgs/body-bg.png');
 	background-size:cover;
@@ -27,7 +26,6 @@ body {
     box-shadow: inset -1px -1px 6px 1px rgba(102, 103, 99, 0.92);
     text-align: center;
     overflow: hidden;
-    display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
     display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
     display: -webkit-flex; /* NEW - Chrome */
     display: flex; /* NEW, Spec - Opera 12.1, Firefox 20+ */
@@ -198,25 +196,11 @@ body {
 }
 
 #popup.opened {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
 }
 
 .hide{
     display: none !important;
-}
-
-#infoDialogTxt {
-    /*position: relative;
-    top: 15%;
-    display: block;
-    width: 210px;
-    height: 130px;
-    color: rgb(202, 0, 0);
-    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.72);
-    background: url(../imgs/win-medal.png) no-repeat 87% 2%;
-    background-size: 21% 28%;*/
 }
 
 .gameOver{
@@ -233,5 +217,9 @@ body {
 .red {
     color: darkred;
     font-weight: bold;
+}
+
+#infoDialogTxt {
+    margin: 33% 0;
 }
 /* End Board Styles */

@@ -20,7 +20,7 @@ var mainContainer,
     maxCellsSize = 6,
     boardPadding = 60,
     answers = '',
-    trials = 15, //how many trials user has
+    trials = 2, //how many trials user has
     score = 0, //user score
     beforeHideCellsTimeout = 1500,
     correctAnswerTimeout = 500,
@@ -41,7 +41,8 @@ var MESSAGES = {
     gameOver: 'GAME OVER!',
     scoreMessage: 'Your score is: ',
     payAttention: 'Remember the tiles positions!',
-    bestResult: 'Your result will be stored as BEST RESULT.\nCongratulations!'
+    bestResult: 'Your result will be stored as BEST RESULT.\nCongratulations!',
+    newGame: 'New game?'
 };
 
 
@@ -102,7 +103,7 @@ function addPoints(tilePts, levelPts) {
     function blinkingScore() {
         var scoreBySpan = document.getElementById("Score");
         scoreBySpan.classList.add("blinkingScore");
-        
+
         setTimeout(function () {
             $('#Score').removeClass('blinkingScore');
         }, 500);
@@ -187,7 +188,7 @@ function goToNextLvl() {
         createBoard(boardDimArray[board][0], boardDimArray[board][1]);
         updateInfobox(MESSAGES.payAttention);
     } else {
-        //GAME OVER - no more trials. Function for displaying GAME OVER Screen here        
+        //GAME OVER - no more trials. Function for displaying GAME OVER Screen here
         endGame();
     }
 }
@@ -204,12 +205,12 @@ function updatePopupSize(width, height) {
 }
 
 function updateBoardAndPopupSizes(cells, rows) {
-    var width = (cells * cellSize) + boardPadding;
-    var height = (rows * cellSize) + boardPadding;
-    board.style.width = width + 'px';
-    board.style.height = height + 'px';
+    var boardWidth = (cells * cellSize) + boardPadding;
+    var boardHeight = (rows * cellSize) + boardPadding;
 
-    updatePopupSize(width, height);
+    $("#board").animate({width: boardWidth, height: boardHeight}, 100);
+
+    updatePopupSize(boardWidth, boardHeight);
 }
 
 function createBoard(cells, rows) {
@@ -301,7 +302,7 @@ function assignCorrectAnswers(level) {
         selectedCells[j].classList.add('openAnswer');
     }
 
-    //hide the pattern and assign onClick event listener     
+    //hide the pattern and assign onClick event listener
     setTimeout(function () {
         hidePattern(selectedCells);
     }, beforeHideCellsTimeout);
@@ -382,13 +383,15 @@ function storeMaxScore(currentScore) {
 
 function endGame() {
     if (!storeMaxScore(score)) {
-        $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n<a href=\"javascript:window.location = window.location;\">New game?</a></div>");
+        $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n<a href=\"javascript:window.location = window.location;\">" + MESSAGES.newGame + "</a></div>");
     } else {
-        $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n" + MESSAGES.bestResult + "</br><a href=\"javascript:window.location = window.location;\">New game?</a></div>");
+        $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n" + MESSAGES.bestResult + "</br><a href=\"javascript:window.location = window.location;\">" + MESSAGES.newGame + "</a></div>");
     }
 }
 
-createBackground();
-createScoreBoard();
-createBoard();
-createInfoBox();
+$(document).ready(function() {
+    createBackground();
+    createScoreBoard();
+    createBoard();
+    createInfoBox();
+});
