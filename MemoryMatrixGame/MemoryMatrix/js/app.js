@@ -24,9 +24,8 @@ var mainContainer,
     score = 0, //user score
     beforeHideCellsTimeout = 1500,
     correctAnswerTimeout = 500,
-    infoboxTimeout = 300,
+    infoBoxTimeout = 300,
     betweenLevelsTimeout = 2000,
-    board = null,
     popup = null,
     canClickOnInfoBox = true, // if "false" the next level will start automatically
     storage = window.localStorage;//holds the browsers local storage
@@ -46,8 +45,7 @@ var MESSAGES = {
 };
 
 
-var ScoreBoardElement = function (imgURL, content, val) {
-    this.imgURL = imgURL;
+var ScoreBoardElement = function (content, val) {
     this.content = content;
     this.val = val;
 };
@@ -70,9 +68,9 @@ function createScoreBoard() {
     var scoreBoardList = document.createElement('ul');
     scoreBoard.appendChild(scoreBoardList);
 
-    var categories = [new ScoreBoardElement('', 'Tiles', getLvl()),
-        new ScoreBoardElement('', 'Trials', trials),
-        new ScoreBoardElement('', 'Score', score)];
+    var categories = [new ScoreBoardElement('Tiles', getLvl()),
+        new ScoreBoardElement('Trials', trials),
+        new ScoreBoardElement('Score', score)];
 
     var categoriesSize = categories.length;
     for (var i = 0; i < categoriesSize; i++) {
@@ -150,19 +148,18 @@ function getUserClick(event) {
                 setTimeout(function () {
                     updateInfobox(MESSAGES.levelSuccess);
                     prepAndShowInfoForNextLvl();
-                }, infoboxTimeout);
+                }, infoBoxTimeout);
             }
         } else if (isClicked) {
-            return;
+            // Intentionally left blank
         } else {
             element.classList.add('incorrectAnswer');
             updateLevelBonus('down');
             playerCanClick = false;
             wasLevelCleared = false;
-            setTimeout(function () {
-                updateInfobox(MESSAGES.levelLost);
-                prepAndShowInfoForNextLvl();
-            }, infoboxTimeout);
+
+            updateInfobox(MESSAGES.levelLost);
+            prepAndShowInfoForNextLvl();
         }
     }
 }
@@ -172,7 +169,7 @@ function goToNextLvl() {
     if (trials) {
         //update trials in scoreboard
         trials--;
-        document.getElementById('Trials').innerHTML = trials;
+        document.getElementById('Trials').innerHTML = trials.toString();
 
         //update Tiles in scoreboard
         document.getElementById('Tiles').innerHTML = getLvl();
@@ -180,7 +177,7 @@ function goToNextLvl() {
         //clear counter
         tilesCounter = 1;
 
-        //generate new board => Chech which is the current level and calc the board cells and rows
+        //generate new board => Check which is the current level and calc the board cells and rows
         var currLvl = getLvl();
         var board = (currLvl <= boardDimArray.length) ? (currLvl - 1) : (boardDimArray.length - 1);
 
@@ -225,13 +222,10 @@ function createBoard(cells, rows) {
         rows = initRowsSize;
     }
 
-    if (!board) {
-        boardContainer = document.createElement('div');
-        boardContainer.id = boardContainerID;
-        mainContainer.appendChild(boardContainer);
-
+    if(!board) {
         board = document.createElement('div');
         board.id = boardId;
+        boardContainer.innerHTML = '';
         boardContainer.appendChild(board);
     }
 
@@ -252,7 +246,7 @@ function createBoard(cells, rows) {
             }
             board.appendChild(row);
         }
-        assignCorrectAnswers(getLvl());
+        assignCorrectAnswers();
     }, correctAnswerTimeout);
 }
 
@@ -268,8 +262,8 @@ function updateInfobox(occasion) {
     infobox.textContent = occasion;
 }
 
-function assignCorrectAnswers(level) {
-
+function assignCorrectAnswers() {
+    var level = getLvl();
     var assignedIndexes = [],
         selectedCells = [],
         cellsArray = document.getElementsByClassName('cell'),
@@ -294,7 +288,6 @@ function assignCorrectAnswers(level) {
         }
     }
 
-    answers = (answers !== '') ? answers : '';
     answers = assignedIndexes.toString();
 
     //show the pattern to player
@@ -382,16 +375,33 @@ function storeMaxScore(currentScore) {
 }
 
 function endGame() {
+    if (!boardContainer) {
+        boardContainer = document.createElement('div');
+        boardContainer.id = boardContainerID;
+        mainContainer.appendChild(boardContainer);
+    }
+
     if (!storeMaxScore(score)) {
-        $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n<a href=\"javascript:window.location = window.location;\">" + MESSAGES.newGame + "</a></div>");
+        $('#boardCont').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n<a href=\"javascript:;\" onclick=\"resetGame()\">" + MESSAGES.newGame + "</a></div>");
     } else {
-        $('#main-container').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n" + MESSAGES.bestResult + "</br><a href=\"javascript:window.location = window.location;\">" + MESSAGES.newGame + "</a></div>");
+        $('#boardCont').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n" + MESSAGES.bestResult + "</br><a href=\"javascript:;\" onclick=\"resetGame()\">" + MESSAGES.newGame + "</a></div>");
     }
 }
 
-$(document).ready(function() {
+function resetGame() {
+    score = 0;
+    trials = 3;
+    createBoard();
+}
+
+function initGame() {
     createBackground();
     createScoreBoard();
-    createBoard();
+    endGame();
+//    createBoard();
     createInfoBox();
+}
+
+$(document).ready(function() {
+    initGame();
 });
