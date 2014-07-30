@@ -1,17 +1,17 @@
 'use strict';
 //GLOBALS
-var mainContainer,
+var mainContainer, //the container of the game, like wrapper
     boardContainer,
-    board,
+    board,//the container of the tiles
     boardId = 'board',
     boardContainerID = 'boardCont',
     currentLvl = 3, // 3 is the starting level
     tilesCounter = 1, //Counter to hold the revealed answers
     levelBonus = 5, //holds the points that will be added if the level succeeds
-    cellSize = 50,
-    pointsForCorrectAnswer = 10,
-    wasLevelCleared = true,
-    playerCanClick = true,
+    cellSize = 50, //the size of the tiles
+    pointsForCorrectAnswer = 10, // the points that a click on a correct tile gives
+    wasLevelCleared = true, //holds the result of the level end
+    playerCanClick = true, //holds if a player can click on the fields
     minRowsSize = 2,
     minCellsSize = 2,
     initCellsSize = 3,
@@ -19,8 +19,8 @@ var mainContainer,
     maxRowsSize = 6,
     maxCellsSize = 6,
     boardPadding = 60,
-    answers = '',
-    trials = 2, //how many trials user has
+   // answers = '',
+    trials = 15, //how many trials user has
     score = 0, //user score
     beforeHideCellsTimeout = 1500,
     correctAnswerTimeout = 500,
@@ -28,11 +28,13 @@ var mainContainer,
     betweenLevelsTimeout = 2000,
     popup = null,
     canClickOnInfoBox = true, // if "false" the next level will start automatically
-    storage = window.localStorage;//holds the browsers local storage
+    storage = window.localStorage; //holds the browsers local storage
 
+//holds the sizes of the board depending on the current level
 var boardDimArray = [[2, 2], [2, 2], [3, 3], [4, 3], [4, 4], [5, 4], [5, 5], [6, 5], [6, 6]];
 
 var MESSAGES = {
+    //holds the messages that appear below the game board
     levelLost: 'Sorry, you missed!\nTry again with less tiles!',
     tileSucess: 'You hit it right! Guess the next tile!',
     levelSuccess: 'Congratulations! You won another level.\nTry with more tiles!',
@@ -62,6 +64,7 @@ function createBackground() {
 }
 
 function createScoreBoard() {
+    //creates the score board at the top of the main container and fills it with elements
     var scoreBoard = document.createElement('div');
     scoreBoard.id = 'score-board';
     mainContainer.appendChild(scoreBoard);
@@ -99,6 +102,7 @@ function addPoints(tilePts, levelPts) {
     scoreSpan.textContent = score;
 
     function blinkingScore() {
+        //appends a class to the score element that makes it blink when new points are added
         var scoreBySpan = document.getElementById("Score");
         scoreBySpan.classList.add("blinkingScore");
 
@@ -111,6 +115,7 @@ function addPoints(tilePts, levelPts) {
 }
 
 function updateLevelBonus(direction) {
+    //increases or decreases the bonus points amount depending on the success of the level
     switch (direction) {
         case 'down':
             if (levelBonus > 5) {
@@ -123,22 +128,23 @@ function updateLevelBonus(direction) {
     }
 }
 function getUserClick(event) {
-    if(playerCanClick === true) {
-
-
-        // This function handles the player click
+    // This function handles the player click
+    if (playerCanClick === true) {
         var element = event.target;
-        // var selectedCellID = element.getAttribute('id');
         var isClicked = (element.getAttribute('data-is-clicked')) ? true : false;
         if (element.getAttribute('data-is-true') && !isClicked) {
+            //if the right tile was clicked
             var currLevel = getLvl();
             if (tilesCounter < currLevel) {
+                //if there are other hidden tile to reveal
                 element.setAttribute('data-is-clicked', 'true');
                 tilesCounter++;
                 addPoints(pointsForCorrectAnswer);
+                updateInfobox(MESSAGES.tileSucess);
                 element.setAttribute('data-is-true', 'false');
 
             } else if (tilesCounter === currLevel) {
+                //if last tile was revealed
                 element.setAttribute('data-is-clicked', 'true');
                 wasLevelCleared = true;
                 updateLevelBonus('up');
@@ -153,6 +159,7 @@ function getUserClick(event) {
         } else if (isClicked) {
             // Intentionally left blank
         } else {
+            //if an incorrect tile was clicked
             element.classList.add('incorrectAnswer');
             updateLevelBonus('down');
             playerCanClick = false;
@@ -185,12 +192,13 @@ function goToNextLvl() {
         createBoard(boardDimArray[board][0], boardDimArray[board][1]);
         updateInfobox(MESSAGES.payAttention);
     } else {
-        //GAME OVER - no more trials. Function for displaying GAME OVER Screen here
+        //GAME OVER - no more trials. Function for displaying GAME OVER Screen     
         endGame();
     }
 }
 
 function updatePopupSize(width, height) {
+    //defines the styles about sizing of the popup that shows the current level result between the levels
     if (popup) {
         width = width || board.offsetWidth;
         height = height || board.offsetHeight;
@@ -202,6 +210,7 @@ function updatePopupSize(width, height) {
 }
 
 function updateBoardAndPopupSizes(cells, rows) {
+
     var boardWidth = (cells * cellSize) + boardPadding;
     var boardHeight = (rows * cellSize) + boardPadding;
 
@@ -211,6 +220,7 @@ function updateBoardAndPopupSizes(cells, rows) {
 }
 
 function createBoard(cells, rows) {
+    //creates the board with given rows and columns arguments
     if (cells) {
         cells = ((cells) && (cells > minCellsSize)) ? ((cells < maxCellsSize) ? cells : maxCellsSize) : minCellsSize;
     } else {
@@ -234,6 +244,7 @@ function createBoard(cells, rows) {
     updateBoardAndPopupSizes(cells, rows);
 
     setTimeout(function () {
+        //generates the tile fields in the board
         for (var i = 1; i <= rows; i++) {
             var row = document.createElement('div');
             row.setAttribute('id', 'row' + i);
@@ -251,12 +262,14 @@ function createBoard(cells, rows) {
 }
 
 function createInfoBox() {
+    //creates an info box for user advices during the game
     var infobox = document.createElement('div');
     infobox.id = 'infobox';
     mainContainer.appendChild(infobox);
 }
 
 function updateInfobox(occasion) {
+    //changes the content of the infobox depending on the passed as argument situation
     var infobox = document.getElementById('infobox');
     infobox.innerText = occasion;
     infobox.textContent = occasion;
@@ -272,7 +285,7 @@ function assignCorrectAnswers() {
     var getRandomNumber = function () {
         return Math.floor(Math.random() * cellsArray.length);
     };
-
+    //assigns attributes until the necessary count of busy tiles has been reached
     for (var i = 0; i < level; i++) {
         canContinue = true;
 
@@ -295,13 +308,13 @@ function assignCorrectAnswers() {
         selectedCells[j].classList.add('openAnswer');
     }
 
-    //hide the pattern and assign onClick event listener
     setTimeout(function () {
         hidePattern(selectedCells);
     }, beforeHideCellsTimeout);
 }
 
 function hidePattern(selectedCellsPattern) {
+    //hides the pattern and assigns onClick event listener     
     for (var k = 0; k < selectedCellsPattern.length; k++) {
         selectedCellsPattern[k].classList.remove('openAnswer');
     }
@@ -318,6 +331,7 @@ function closePopup() {
 }
 
 function updateCurrentLvl() {
+    //changes the current level depending on the previous level result
     if (wasLevelCleared === true) {
         currentLvl++;
     } else if (currentLvl > 1) {
@@ -326,6 +340,7 @@ function updateCurrentLvl() {
 }
 
 function prepAndShowInfoForNextLvl() {
+
     var msg = document.getElementById('infoDialogTxt');
     if (!popup) {
         popup = document.createElement('div');
@@ -360,6 +375,8 @@ function prepAndShowInfoForNextLvl() {
 }
 
 function storeMaxScore(currentScore) {
+    //creates a local storage if it doesnt exist and saves the current result if any bigger score hasn't been saved
+    //returns true if the current score is the maximal until the moment
     if (typeof (storage) !== 'undefined') {
         if (typeof (storage.maxScore) !== 'undefined') {
             if (parseInt(storage.maxScore) < currentScore) {
