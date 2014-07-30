@@ -20,7 +20,7 @@ body {
     min-height: 460px;
     margin: 0 auto;
     margin-top: 3%;
-    padding-bottom: 1%;
+    padding-bottom: 1.5%;
     border-radius: 15px;
     background-image: url('../imgs/main-bg.png');
     box-shadow: inset -1px -1px 6px 1px rgba(102, 103, 99, 0.92);
@@ -211,6 +211,19 @@ body {
 .gameOver{
     width:70%;
     height: 70%;
+}
+
+.gameOver a {
+    padding: 2% 4%;
+    background-color: rgba(255, 0, 0, 0.6);
+    border: 2px solid #ad1212;
+    border-top-color: rgba(173, 18, 18, 0.6);
+    border-left-color: rgba(173, 18, 18, 0.6);
+    border-radius: 1rem;
+    box-shadow: inset 0 -1px 6px #ad1212;
+    color: white;
+    text-decoration: none;
+    cursor: default;
 }
 
 .green {
