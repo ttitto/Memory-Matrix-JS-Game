@@ -92,7 +92,8 @@ body {
         0% { opacity: 1.0; }
         50% { opacity: 0.0; }
         100% { opacity: 1.0; }
-        }
+        
+}
 
 #score-board .score-board-value {
     color: rgba(255, 0, 0, 0.72);
@@ -226,6 +227,8 @@ body {
     color: white;
     text-decoration: none;
     cursor: default;
+    display: inline-block;
+    margin:10px;
 }
 
 .gameOver a:active {
