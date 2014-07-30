@@ -43,7 +43,7 @@ var MESSAGES = {
     scoreMessage: 'Your score is: ',
     payAttention: 'Remember the tiles positions!',
     bestResult: 'Your result will be stored as BEST RESULT.\nCongratulations!',
-    newGame: 'New game?',
+    newGame: 'New game',
     startGameMsg: 'Start Game',
     startGame: 'Memory Matrix',
     teamName: 'by Desert Planet'
@@ -411,13 +411,7 @@ function startGame() {
         mainContainer.appendChild(boardContainer);
     }
 
-        $('#boardCont').html("").append("<div class='gameOver'><h2>" + MESSAGES.startGame + "</h2>\n<h4>by Desert Planet</h4><a href=\"javascript:;\" onclick=\"resetGame()\">" + MESSAGES.startGameMsg + "</a></div>");
-}
-
-function resetGame() {
-    score = 0;
-    trials = 3;
-    createBoard();
+    $('#boardCont').html("").append("<div class='gameOver'><h2>" + MESSAGES.startGame + "</h2>\n<h4>by Desert Planet</h4><a href=\"javascript:;\" onclick=\"createBoard()\">" + MESSAGES.startGameMsg + "</a></div>");
 }
 
 function initGame() {
