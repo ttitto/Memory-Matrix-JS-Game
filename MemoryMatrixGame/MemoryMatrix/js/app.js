@@ -1,28 +1,110 @@
 'use strict';
 //GLOBALS
-var mainContainer, //the container of the game, like wrapper
+/**
+ * The wrapper container
+ */
+var mainContainer,
+    /**
+     * The container that holds the table with the tiles
+     */
     boardContainer,
+    /**
+     * The table with the tiles to guess
+     */
     board,//the container of the tiles
-    boardId = 'board',
-    boardContainerID = 'boardCont',
-    currentLvl = 3, // 3 is the starting level
-    tilesCounter = 1, //Counter to hold the revealed answers
-    levelBonus = 5, //holds the points that will be added if the level succeeds
-    cellSize = 50, //the size of the tiles
-    pointsForCorrectAnswer = 10, // the points that a click on a correct tile gives
-    wasLevelCleared = true, //holds the result of the level end
-    playerCanClick = true, //holds if a player can click on the fields
+//    boardId = 'board',
+//    boardContainerID = 'boardCont',
+    /**
+     * Holds the current level number
+     * @type {number}
+     */
+    currentLvl = 3,
+    /**
+     * Holds the revealed tiles count
+     * @type {number}
+     */
+    tilesCounter = 1,
+    /**
+     * Holds the points that will be added additionally to the score if all tiles of the level are revealed
+     * @type {number}
+     */
+    levelBonus = 5,
+    /**
+     * Holds the size of the tiles in px.
+     * @type {number}
+     */
+    cellSize = 50,
+    /**
+     * Holds the points that will be added to the score if a single tile is revealed
+     * @type {number}
+     */
+    pointsForCorrectAnswer = 10,
+    /**
+     * Holds the result of a level end: true if the level is successfully cleared, false if some tiles has left hidden.
+     * @type {boolean}
+     */
+    wasLevelCleared = true,
+    /**
+     * Holds true if the player is allowed to click on tiles and files if not
+     * @type {boolean}
+     */
+    playerCanClick = true,
+    /**
+     *Holds the minimum allowed cells' count per row
+     * @type {number}
+     */
     minRowsSize = 2,
+    /**
+     * Holds the minimum allowed cells' count per column
+     * @type {number}
+     */
     minCellsSize = 2,
+    /**
+     * Holds the cells' count per column at the start of the game
+     * @type {number}
+     */
     initCellsSize = 3,
+    /**
+     * Holds the cells' count per row at the start of the game
+     * @type {number}
+     */
     initRowsSize = 3,
+    /**
+     * Holds the maximum allowed cells'count per row
+     * @type {number}
+     */
     maxRowsSize = 6,
+    /**
+     *  Holds the maximum allowed cells'count per column
+     * @type {number}
+     */
     maxCellsSize = 6,
+    /**
+     *  Holds the padding of the table of the tiles
+     * @type {number}
+     */
     boardPadding = 60,
-    answers = '',
-    trials = 15, //how many trials user has
-    score = 0, //user score
+
+  //  answers = '',
+    /**
+     * Holds the number of trials left
+     * @type {number}
+     */
+        trials = 15, //how many trials user has
+    /**
+     * Holds the current score of the player
+     * @type {number}
+     */
+    score = 0,
+    /**
+     * Holds the time to wait before the correct answers will hide
+     * @type {number}
+     */
     beforeHideCellsTimeout = 1500,
+    /**
+     * Holds the time to wait before the table is generated and the correct answers are assigned to its cells
+     * @type {number}
+     */
     correctAnswerTimeout = 500,
     infoBoxTimeout = 300,
     betweenLevelsTimeout = 2000,
@@ -30,8 +112,21 @@ var mainContainer, //the container of the game, like wrapper
     canClickOnInfoBox = true, // if "false" the next level will start automatically
     storage = window.localStorage; //holds the browsers local storage
 
-//holds the sizes of the board depending on the current level
-var boardDimArray = [[2, 2], [2, 2], [3, 3], [4, 3], [4, 4], [5, 4], [5, 5], [6, 5], [6, 6]];
+/**
+ * Holds the sizes of the board depending on the current level
+ */
+
+var boardDimArray = [
+    [2, 2],
+    [2, 2],
+    [3, 3],
+    [4, 3],
+    [4, 4],
+    [5, 4],
+    [5, 5],
+    [6, 5],
+    [6, 6]
+];
 
 var MESSAGES = {
     //holds the messages that appear below the game board
@@ -49,12 +144,20 @@ var MESSAGES = {
     teamName: 'by Desert Planet'
 };
 
-
+/**
+ * An element that is visualized in the title area of the game board container. It has a format key: value
+ * @param content the name of the ScoreBoardElement
+ * @param val the value of the ScoreBoardElement
+ * @constructor
+ */
 var ScoreBoardElement = function (content, val) {
     this.content = content;
     this.val = val;
 };
-
+/**
+ * Returns the current level number which corresponds to the number of the hidden tiles to be revealed
+ * @returns {number} currentLvl global variable
+ */
 function getLvl() {
     return currentLvl;
 }
@@ -235,9 +338,9 @@ function createBoard(cells, rows) {
         rows = initRowsSize;
     }
 
-    if(!board) {
+    if (!board) {
         board = document.createElement('div');
-        board.id = boardId;
+        board.id = 'board';
         boardContainer.innerHTML = '';
         boardContainer.appendChild(board);
     }
@@ -304,7 +407,7 @@ function assignCorrectAnswers() {
         }
     }
 
-    answers = assignedIndexes.toString();
+   // answers = assignedIndexes.toString();
 
     //show the pattern to player
     for (var j = 0; j < selectedCells.length; j++) {
@@ -396,7 +499,7 @@ function storeMaxScore(currentScore) {
 
 function endGame() {
     //shows a game over popup with points information about the ended game and a link to a new game
-    
+
     if (!storeMaxScore(score)) {
         $('#boardCont').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n<a href=\"javascript:window.location = window.location;\">" + MESSAGES.newGame + "</a></div>");
     } else {
@@ -407,7 +510,7 @@ function endGame() {
 function startGame() {
     if (!boardContainer) {
         boardContainer = document.createElement('div');
-        boardContainer.id = boardContainerID;
+        boardContainer.id = 'boardCont';
         mainContainer.appendChild(boardContainer);
     }
 
@@ -421,6 +524,6 @@ function initGame() {
     createInfoBox();
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     initGame();
 });
