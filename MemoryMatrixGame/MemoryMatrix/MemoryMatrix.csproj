@@ -57,6 +57,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="imgs\body-bg.jpg" />
+    <Content Include="imgs\incorrectAnswer.png" />
+    <Content Include="imgs\main-bg.jpg" />
     <Content Include="imgs\win-medal.png" />
     <Content Include="imgs\yellow-star-icon.png" />
     <Content Include="js-webshim\dev\shims\combos\comboinfo.json" />
@@ -94,8 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\styles.css" />
-    <Content Include="imgs\body-bg.png" />
-    <Content Include="imgs\main-bg.png" />
     <Content Include="index.html" />
     <Content Include="js-webshim\dev\polyfiller.js" />
     <Content Include="js-webshim\dev\shims\color-picker.js" />
@@ -371,8 +372,8 @@
     <Content Include="js-webshim\minified\shims\swf\JarisFLVPlayer.swf" />
     <Content Include="js-webshim\minified\shims\track-ui.js" />
     <Content Include="js-webshim\minified\shims\track.js" />
-    <Content Include="js\app.js" />
     <Content Include="js\jquery-1.11.1.js" />
+    <Content Include="js\memoryMatrixGame.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
