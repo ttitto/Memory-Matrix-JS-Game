@@ -1,7 +1,7 @@
 Memory-Matrix-JS-Game
 =====================
 
-A teamwork project for the Javascript basics course in SoftUni, july 2014.
+A teamwork project for the Javascript basics course in SoftUni, july 2014.<br />
 Team "DESERT PLANET"
 
 ##Rules
@@ -18,11 +18,15 @@ The [documentation](./docs/global.html), included in the root directory of this 
 
 ###External libraries
 
--[JQuery](https://github.com/jquery/jquery)
--[Webshim](https://github.com/aFarkas/webshim)
+<ul>
+<li>[JQuery](https://github.com/jquery/jquery)</li>
+<li>[Webshim](https://github.com/aFarkas/webshim)</li>
+</ul>
 
-## Copyright and license
+<h2> Copyright and license</h2>
 
-Code and documentation copyright 2014, TEAM "DESERT PLANET", SoftUni.<br>
--Code released under [the MIT license](LICENSE).
--Docs released under [Creative Commons](docs/LICENSE).
+<p>Code and documentation copyright 2014, TEAM "DESERT PLANET", SoftUni.</p>
+<ul>
+<li>Code released under [the MIT license](LICENSE)</li>
+<li>Docs released under [Creative Commons]</li>
+</ul>
