@@ -9,7 +9,7 @@ Team "DESERT PLANET"
 1. It is a one player game.
 2. The player sees for a while a randomly generated configuration of colored tiles and tries to remember it. The player has to guess the positions of the different tiles.
 3. For each revealed tile the player adds 10 points to his score.
-4. For each successfully finished level the player wins additional bonus points. They are minimum 5 points and are doubled each time the player wins a level.If a level is lost the bonus points bfor the next level are divided by 2.
+4. For each successfully finished level the player wins additional bonus points. They are minimum 5 points and are doubled each time the player wins a level.If a level is lost the bonus points for the next level are divided by 2.
 5. The target is to gain as many points as possible and win all the 15 levels without errors.
 
 ##Documentation
