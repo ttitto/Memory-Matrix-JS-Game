@@ -23,6 +23,6 @@ The [documentation](./docs/global.html), included in the root directory of this 
 
 ## Copyright and license
 
-Code and documentation copyright 2014, TEAM "DESERT PLANET", SoftUni.
+Code and documentation copyright 2014, TEAM "DESERT PLANET", SoftUni.<br>
 -Code released under [the MIT license](LICENSE).
 -Docs released under [Creative Commons](docs/LICENSE).
