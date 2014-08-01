@@ -7,85 +7,85 @@ var mainContainer,
     /**
      * The container that holds the table with the tiles
      */
-    boardContainer,
+        boardContainer,
     /**
      * The table with the tiles to guess
      */
-    board,//the container of the tiles
+        board,//the container of the tiles
 //    boardId = 'board',
 //    boardContainerID = 'boardCont',
     /**
      * Holds the current level number
      * @type {number}
      */
-    currentLvl = 3,
+        currentLvl = 3,
     /**
      * Holds the revealed tiles count
      * @type {number}
      */
-    tilesCounter = 1,
+        tilesCounter = 1,
     /**
      * Holds the points that will be added additionally to the score if all tiles of the level are revealed
      * @type {number}
      */
-    levelBonus = 5,
+        levelBonus = 5,
     /**
      * Holds the size of the tiles in px.
      * @type {number}
      */
-    cellSize = 50,
+        cellSize = 50,
     /**
      * Holds the points that will be added to the score if a single tile is revealed
      * @type {number}
      */
-    pointsForCorrectAnswer = 10,
+        pointsForCorrectAnswer = 10,
     /**
      * Holds the result of a level end: true if the level is successfully cleared, false if some tiles has left hidden.
      * @type {boolean}
      */
-    wasLevelCleared = true,
+        wasLevelCleared = true,
     /**
      * Holds true if the player is allowed to click on tiles and files if not
      * @type {boolean}
      */
-    playerCanClick = true,
+        playerCanClick = true,
     /**
      *Holds the minimum allowed cells' count per row
      * @type {number}
      */
-    minRowsSize = 2,
+        minRowsSize = 2,
     /**
      * Holds the minimum allowed cells' count per column
      * @type {number}
      */
-    minCellsSize = 2,
+        minCellsSize = 2,
     /**
      * Holds the cells' count per column at the start of the game
      * @type {number}
      */
-    initCellsSize = 3,
+        initCellsSize = 3,
     /**
      * Holds the cells' count per row at the start of the game
      * @type {number}
      */
-    initRowsSize = 3,
+        initRowsSize = 3,
     /**
      * Holds the maximum allowed cells'count per row
      * @type {number}
      */
-    maxRowsSize = 6,
+        maxRowsSize = 6,
     /**
      *  Holds the maximum allowed cells'count per column
      * @type {number}
      */
-    maxCellsSize = 6,
+        maxCellsSize = 6,
     /**
      *  Holds the padding of the table of the tiles
      * @type {number}
      */
-    boardPadding = 60,
+        boardPadding = 60,
 
-  //  answers = '',
+//  answers = '',
     /**
      * Holds the number of trials left
      * @type {number}
@@ -95,22 +95,42 @@ var mainContainer,
      * Holds the current score of the player
      * @type {number}
      */
-    score = 0,
+        score = 0,
     /**
      * Holds the time to wait before the correct answers will hide
      * @type {number}
      */
-    beforeHideCellsTimeout = 1500,
+        beforeHideCellsTimeout = 1500,
     /**
      * Holds the time to wait before the table is generated and the correct answers are assigned to its cells
      * @type {number}
      */
-    correctAnswerTimeout = 500,
-    infoBoxTimeout = 300,
-    betweenLevelsTimeout = 2000,
-    popup = null,
-    canClickOnInfoBox = true, // if "false" the next level will start automatically
-    storage = window.localStorage; //holds the browsers local storage
+        correctAnswerTimeout = 500,
+    /**
+     *Holds the time to wait until the next level is prepared
+     * @type {number}
+     */
+        infoBoxTimeout = 300,
+    /**
+     *Holds the time to wait before the next level is prepared
+     * @type {number}
+     */
+        betweenLevelsTimeout = 2000,
+    /**
+     * Holds an instance of a div object that appears between the levels
+     * @type {object}
+     */
+        popup = null,
+    /**
+     * If true the next level will wait a click on the board to start. If false the next level will start automatically.
+     * @type {boolean}
+     */
+        canClickOnInfoBox = true,
+    /**
+     * Holds the current browser local storage.
+     * @type {Storage}
+     */
+        storage = window.localStorage;
 
 /**
  * Holds the sizes of the board depending on the current level
@@ -127,11 +147,13 @@ var boardDimArray = [
     [6, 5],
     [6, 6]
 ];
-
+/**
+ * Holds the message texts that are use in different situations in the game
+ * @type {{levelLost: string, tileSuccess: string, levelSuccess: string, guess: string, gameOver: string, scoreMessage: string, payAttention: string, bestResult: string, newGame: string, startGameMsg: string, startGame: string, teamName: string}}
+ */
 var MESSAGES = {
-    //holds the messages that appear below the game board
     levelLost: 'Sorry, you missed!\nTry again with less tiles!',
-    tileSucess: 'You hit it right! Guess the next tile!',
+    tileSuccess: 'You hit it right! Guess the next tile!',
     levelSuccess: 'Congratulations! You won another level.\nTry with more tiles!',
     guess: 'Guess the next tile!',
     gameOver: 'GAME OVER!',
@@ -161,16 +183,19 @@ var ScoreBoardElement = function (content, val) {
 function getLvl() {
     return currentLvl;
 }
-
+/**
+ * Creates the wrapper container of the game
+ */
 function createBackground() {
     mainContainer = document.createElement('main');
     mainContainer.id = 'main-container';
 
     document.body.appendChild(mainContainer);
 }
-
+/**
+ * Creates a div element at the top of the wrapper container that holds usefull information about the current state of the game, ex. Tiles to find, left trials and current score
+ */
 function createScoreBoard() {
-    //creates the score board at the top of the main container and fills it with elements
     var scoreBoard = document.createElement('div');
     scoreBoard.id = 'score-board';
     mainContainer.appendChild(scoreBoard);
@@ -197,9 +222,12 @@ function createScoreBoard() {
         li.appendChild(sp);
     }
 }
-
+/**
+ * Appends new earned points to the current score depending on that if the points are earned when a tile was revealed or they are bonus points at the end of the level
+ * @param tilePts Points that are won from the right guess of a tile
+ * @param levelPts [optional] Points that are won at the end of a level
+ */
 function addPoints(tilePts, levelPts) {
-    //increases the score by given amount of points passed as parameters
     levelPts = levelPts || 0;
     var scoreSpan = document.getElementById('Score');
     score = scoreSpan.innerText || scoreSpan.textContent;
@@ -207,21 +235,24 @@ function addPoints(tilePts, levelPts) {
     scoreSpan.innerText = score;
     scoreSpan.textContent = score;
 
-    function blinkingScore() {
-        //appends a class to the score element that makes it blink when new points are added
-        var scoreBySpan = document.getElementById("Score");
-        scoreBySpan.classList.add("blinkingScore");
-
-        setTimeout(function () {
-            $('#Score').removeClass('blinkingScore');
-        }, 500);
-    }
-
     blinkingScore();
 }
+/**
+ * Appends a class to the score element that makes it blink when new points are added
+ */
+function blinkingScore() {
+    var scoreBySpan = document.getElementById("Score");
+    scoreBySpan.classList.add("blinkingScore");
 
+    setTimeout(function () {
+        $('#Score').removeClass('blinkingScore');
+    }, 500);
+}
+/**
+ * Increases or decreases the bonus points amount depending on the success of the level
+ * @param direction Holds 'down' or 'up'
+ */
 function updateLevelBonus(direction) {
-    //increases or decreases the bonus points amount depending on the success of the level
     switch (direction) {
         case 'down':
             if (levelBonus > 5) {
@@ -233,8 +264,11 @@ function updateLevelBonus(direction) {
             break;
     }
 }
+/**
+ * Handles the user click and call other function depending on the situation when a right tile was clicked, a false tile was clicked, there are other tile to reveal, there aren't other tile to reveal
+ * @param event
+ */
 function getUserClick(event) {
-    // This function handles the player click
     if (playerCanClick === true) {
         var element = event.target;
         var isClicked = (element.getAttribute('data-is-clicked')) ? true : false;
@@ -246,7 +280,7 @@ function getUserClick(event) {
                 element.setAttribute('data-is-clicked', 'true');
                 tilesCounter++;
                 addPoints(pointsForCorrectAnswer);
-                updateInfobox(MESSAGES.tileSucess);
+                updateInfobox(MESSAGES.tileSuccess);
                 element.setAttribute('data-is-true', 'false');
 
             } else if (tilesCounter === currLevel) {
@@ -276,7 +310,13 @@ function getUserClick(event) {
         }
     }
 }
-
+/**
+ * Prepares the game for a new level by:
+ * 1. updating the trials count in the score board
+ * 2. updating the tiles count in the score board
+ * 3. generating the new level board
+ * Or calls the game over logic
+ */
 function goToNextLvl() {
     playerCanClick = true;
     if (trials) {
@@ -285,7 +325,7 @@ function goToNextLvl() {
         document.getElementById('Trials').innerHTML = trials.toString();
 
         //update Tiles in scoreboard
-        document.getElementById('Tiles').innerHTML = getLvl();
+        document.getElementById('Tiles').innerHTML = getLvl().toString();
 
         //clear counter
         tilesCounter = 1;
@@ -302,9 +342,12 @@ function goToNextLvl() {
         endGame();
     }
 }
-
+/**
+ * Defines the styles about sizing of the popup that shows the current level result between the levels
+ * @param width Width of the popup window
+ * @param height Height of the poput window
+ */
 function updatePopupSize(width, height) {
-    //defines the styles about sizing of the popup that shows the current level result between the levels
     if (popup) {
         width = width || board.offsetWidth;
         height = height || board.offsetHeight;
@@ -314,7 +357,11 @@ function updatePopupSize(width, height) {
         popup.style.left = -(width / 2) + 'px';
     }
 }
-
+/**
+ * Updates the board size and calls the logic to update the popup size
+ * @param cells Count of the columns in the board
+ * @param rows Count of the rows in the board
+ */
 function updateBoardAndPopupSizes(cells, rows) {
 
     var boardWidth = (cells * cellSize) + boardPadding;
@@ -324,7 +371,11 @@ function updateBoardAndPopupSizes(cells, rows) {
 
     updatePopupSize(boardWidth, boardHeight);
 }
-
+/**
+ * Creates the table with the tiles
+ * @param cells Count of the columns in the board
+ * @param rows Count of the rows in the board
+ */
 function createBoard(cells, rows) {
     //creates the board with given rows and columns arguments
     if (cells) {
@@ -366,28 +417,36 @@ function createBoard(cells, rows) {
         assignCorrectAnswers();
     }, correctAnswerTimeout);
 }
-
+/**
+ * Creates an info box for user advices during the game
+ */
 function createInfoBox() {
-    //creates an info box for user advices during the game
     var infobox = document.createElement('div');
     infobox.id = 'infobox';
     mainContainer.appendChild(infobox);
 }
-
+/**
+ * Changes the content of the infobox depending on the passed as argument situation
+ * @param occasion String holding the message to be shown in the infobox
+ */
 function updateInfobox(occasion) {
-    //changes the content of the infobox depending on the passed as argument situation
     var infobox = document.getElementById('infobox');
     infobox.innerText = occasion;
     infobox.textContent = occasion;
 }
-
+/**
+ * Assigns randomly attributes to mark the necessary tiles as correct
+ */
 function assignCorrectAnswers() {
     var level = getLvl();
     var assignedIndexes = [],
         selectedCells = [],
         cellsArray = document.getElementsByClassName('cell'),
         canContinue = true;
-
+    /**
+     * Random generator from 0 to the cells count in the board
+     * @returns {number}
+     */
     var getRandomNumber = function () {
         return Math.floor(Math.random() * cellsArray.length);
     };
@@ -407,7 +466,7 @@ function assignCorrectAnswers() {
         }
     }
 
-   // answers = assignedIndexes.toString();
+    // answers = assignedIndexes.toString();
 
     //show the pattern to player
     for (var j = 0; j < selectedCells.length; j++) {
@@ -418,9 +477,11 @@ function assignCorrectAnswers() {
         hidePattern(selectedCells);
     }, beforeHideCellsTimeout);
 }
-
+/**
+ * Hides the correct tiles' pattern and assigns onClick event listener to the cells
+ * @param selectedCellsPattern
+ */
 function hidePattern(selectedCellsPattern) {
-    //hides the pattern and assigns onClick event listener     
     for (var k = 0; k < selectedCellsPattern.length; k++) {
         selectedCellsPattern[k].classList.remove('openAnswer');
     }
@@ -430,21 +491,26 @@ function hidePattern(selectedCellsPattern) {
     }
     updateInfobox(MESSAGES.guess);
 }
-
+/**
+ * Closes the popup with level end information and call the logic to prepare the next level
+ */
 function closePopup() {
     popup.classList.remove('opened');
     goToNextLvl();
 }
-
+/**
+ * Changes the current level number depending on the previous level result
+ */
 function updateCurrentLvl() {
-    //changes the current level depending on the previous level result
     if (wasLevelCleared === true) {
         currentLvl++;
     } else if (currentLvl > 1) {
         currentLvl--;
     }
 }
-
+/**
+ * Prepares and renders the information to be shown in the popup window between the levels
+ */
 function prepAndShowInfoForNextLvl() {
 
     var msg = document.getElementById('infoDialogTxt');
@@ -479,10 +545,13 @@ function prepAndShowInfoForNextLvl() {
         }, betweenLevelsTimeout);
     }
 }
-
+/**
+ * Checks if the local storage of the browser has already key for the maximal score and compares its value with the current game ending score.
+ * Updates the score if the current one is better.
+ * @param currentScore The current game score
+ * @returns {boolean} Returns true if the current value is bigger than the saved one in the local storage, otherwise returns false.
+ */
 function storeMaxScore(currentScore) {
-    //creates a local storage if it doesnt exist and saves the current result if any bigger score hasn't been saved
-    //returns true if the current score is the maximal until the moment
     if (typeof (storage) !== 'undefined') {
         if (typeof (storage.maxScore) !== 'undefined') {
             if (parseInt(storage.maxScore) < currentScore) {
@@ -496,9 +565,10 @@ function storeMaxScore(currentScore) {
     }
     return false;
 }
-
+/**
+ * Shows a game over popup with points information about the ended game and a link to a new game
+ */
 function endGame() {
-    //shows a game over popup with points information about the ended game and a link to a new game
 
     if (!storeMaxScore(score)) {
         $('#boardCont').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n<a href=\"javascript:window.location = window.location;\">" + MESSAGES.newGame + "</a></div>");
@@ -506,7 +576,9 @@ function endGame() {
         $('#boardCont').html("").append("<div class='gameOver'><h2>" + MESSAGES.gameOver + "</h2>\n<p>" + MESSAGES.scoreMessage + score + "</p>\n" + MESSAGES.bestResult + "</br><a href=\"javascript:window.location = window.location;\">" + MESSAGES.newGame + "</a></div>");
     }
 }
-
+/**
+ * Creates a container with information for new game start that starts the game on click
+ */
 function startGame() {
     if (!boardContainer) {
         boardContainer = document.createElement('div');
@@ -516,14 +588,18 @@ function startGame() {
 
     $('#boardCont').html("").append("<div class='gameOver'><h2>" + MESSAGES.startGame + "</h2>\n<h4>by Desert Planet</h4><a href=\"javascript:;\" onclick=\"createBoard()\">" + MESSAGES.startGameMsg + "</a></div>");
 }
-
+/**
+ * Calls the functions responsible for the game initiation
+ */
 function initGame() {
     createBackground();
     createScoreBoard();
     startGame();
     createInfoBox();
 }
-
+/**
+ * Calls the game initiation logic
+ */
 $(document).ready(function () {
     initGame();
 });
