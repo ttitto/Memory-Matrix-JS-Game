@@ -7,7 +7,7 @@ html, body, canvas, div, span, ul, li {
 }
 
 body {
-    background-image: url('../imgs/body-bg.png');
+    background-image: url('../imgs/body-bg.jpg');
 	background-size:cover;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 18px;
@@ -22,7 +22,7 @@ body {
     margin-top: 3%;
     padding-bottom: 1.5%;
     border-radius: 15px;
-    background-image: url('../imgs/main-bg.png');
+    background-image: url('../imgs/main-bg.jpg');
     box-shadow: inset -1px -1px 6px 1px rgba(102, 103, 99, 0.92);
     text-align: center;
     overflow: hidden;
